@@ -512,7 +512,7 @@
     <div class="container">
         <!-- Header -->
         <header class="header" id="header">
-            <h1>AI Operations Readiness Manager</h1>
+            <h1>AI Operations Readiness Team Plan</h1>
             <p>Comprehensive Strategy for Safe & Compliant AI Implementation in Lending</p>
             <nav class="nav-menu">
                 <a href="#mission" class="nav-link">Mission</a>
@@ -632,13 +632,13 @@
                         <h3>2. Create AI Readiness Documentation and Procedures</h3>
                         <p><strong>Track requirements across:</strong></p>
                         <ul>
-                            <li>🧠 Model documentation: Version, logic, inputs/outputs, performance</li>
+                            <li>Model documentation: Version, logic, inputs/outputs, performance</li>
                             <li>Consistency: Develop AI prompt standards and guidelines</li>
  		                    <li>Testing: Craft comprehensive testing requirements for new AI solutions</li>
-                            <li>⚖️ Bias & fairness testing: Ensure no race, gender, religion, etc. impacts</li>
-                            <li>🔎 Explainability: Transparency in decision prompt or tool logic</li>
-                            <li>🛡️ Resiliency: Documented plans for AI tool downtime</li>
-                            <li>📜 Audit readiness: Stored documentation of responses, issues, and prompt logic</li>
+                            <li>Bias & fairness testing: Ensure no race, gender, religion, etc. impacts</li>
+                            <li>Explainability: Transparency in decision prompt or tool logic</li>
+                            <li>Resiliency: Documented plans for AI tool downtime</li>
+                            <li>Audit readiness: Stored documentation of responses, issues, and prompt logic</li>
                              <li>Edge case handling: Documented strategies for managing unexpected AI behavior</li>
                         </ul>
                     </div>
@@ -865,7 +865,7 @@
             <section id="future-term" class="section">
                 <div class="plan-header">
                     <h2>🌟 FUTURE-TERM STRATEGY (24 Months and Beyond)</h2>
-                    <p class="plan-objectives">🎯 Objective: Integration with outside LOB AI teams, next-generation AI monitoring, and .</p>
+                    <p class="plan-objectives">🎯 Objective: Integration with outside LOB AI teams, next-generation AI monitoring, and achieve our 40% efficiency goal.</p>
                 </div>
 
                 <div class="action-grid">
