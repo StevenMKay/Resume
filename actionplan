@@ -577,10 +577,10 @@
 
 
                     <div class="metric-card">
-   <div class="metric-target">4.8 / 5</div>
-                        <h4>Executive Confidence</h4>
+   <div class="metric-target">20%</div>
+                        <h4>Incident Reduction YoY</h4>
                      
-                        <p>Metric displaying the rate at which leadership has confidence in AI tools</p>
+                        <p>Ensure controls, processes, and AI tools in place to reduce errors</p>
                     </div>
 
 
@@ -591,9 +591,9 @@
 
                     <div class="metric-card">
           <div class="metric-target">4.5/5</div>
-                        <h4>Stakeholder Satisfaction</h4>
+                        <h4>Stakeholder and Executive Satisfaction</h4>
               
-                        <p>Internal user satisfaction score</p>
+                        <p>Internal user and leader satisfaction and confidence score</p>
                     </div>
                 </div>
             </section>
