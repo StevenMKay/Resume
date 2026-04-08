@@ -90,20 +90,24 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
       <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:#4B5563;font-family:'Chivo'">Project Timeline</h2>
       <div class="flex items-center gap-2">
-        <button onclick="document.getElementById('legend-panel').classList.toggle('hidden');this.querySelector('.chev').classList.toggle('rotate-180')" class="flex items-center gap-1.5 text-xs font-medium border rounded-sm px-2.5 py-1.5 hover:bg-white transition-colors" style="border-color:#E5E7EB;color:#4B5563;background:#FFFFFF">
+        <!-- Mobile-only legend toggle -->
+        <button onclick="document.getElementById('legend-panel').classList.toggle('hidden');this.querySelector('.chev').classList.toggle('rotate-180')" class="sm:hidden flex items-center gap-1.5 text-xs font-medium border rounded-sm px-2.5 py-1.5 hover:bg-white transition-colors" style="border-color:#E5E7EB;color:#4B5563;background:#FFFFFF">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           Legend
           <svg class="chev transition-transform duration-200" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="w-px h-5 bg-gray-200"></div>
+        <div class="sm:hidden w-px h-5 bg-gray-200"></div>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
         <select id="status-filter" onchange="renderTimeline()" class="text-xs border rounded-sm px-2 py-1" style="border-color:#E5E7EB">
           <option value="all">All Status</option><option value="completed">Completed</option><option value="in-progress">In Progress</option><option value="not-started">Not Started</option>
         </select>
       </div>
     </div>
-    <div id="legend-panel" class="hidden border rounded-sm mb-3 p-4" style="border-color:#E5E7EB;background:#FFFFFF">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[11px]" style="color:#4B5563">
+    <!-- Desktop inline legend -->
+    <div class="hidden sm:flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] mb-3 px-1" style="color:#4B5563" id="desktop-legend"></div>
+    <!-- Mobile dropdown legend -->
+    <div id="legend-panel" class="hidden sm:hidden border rounded-sm mb-3 p-4" style="border-color:#E5E7EB;background:#FFFFFF">
+      <div class="grid grid-cols-1 gap-4 text-[11px]" style="color:#4B5563">
         <div>
           <p class="text-[10px] font-bold uppercase tracking-wider mb-2" style="color:#111827">Project Status</p>
           <div class="space-y-1.5">
@@ -114,7 +118,7 @@
         </div>
         <div>
           <p class="text-[10px] font-bold uppercase tracking-wider mb-2" style="color:#111827">Audit Windows</p>
-          <div class="space-y-1.5" id="legend-audits"></div>
+          <div class="space-y-1.5" id="legend-audits-mobile"></div>
         </div>
         <div>
           <p class="text-[10px] font-bold uppercase tracking-wider mb-2" style="color:#111827">Priority</p>
@@ -175,10 +179,23 @@ const prioCfg={"high":{bg:"#FEE2E2",text:"#B91C1C"},"medium":{bg:"#FEF3C7",text:
 
 function badge(label,bg,text){return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap" style="background:${bg};color:${text}">${label}</span>`;}
 function getPos(d){return Math.max(0,Math.min(100,((new Date(d)-TL_START)/(TL_END-TL_START))*100));}
-function shieldIcon(color,s){return `<svg width="${s||10}" height="${s||10}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;}
+function auditIcon(color,s){return `<svg width="${s||10}" height="${s||10}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5" style="flex-shrink:0;display:inline-block;vertical-align:middle"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>`;}
 
-// Legend - audit windows column
-document.getElementById('legend-audits').innerHTML=AUDITS.map(a=>`<div class="flex items-center gap-2"><div class="w-5 h-3.5 rounded-sm" style="background:${a.color};opacity:0.15;border:1px solid ${a.color}30"></div>${shieldIcon(a.color,10)}<span style="color:${a.color};font-weight:600">${a.agency}</span></div>`).join('');
+// Desktop inline legend
+document.getElementById('desktop-legend').innerHTML=`
+  <span class="font-semibold" style="color:#111827">Legend:</span>
+  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#005EB8;opacity:0.85"></div><span>In Progress</span></div>
+  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#047857;opacity:0.85"></div><span>Completed</span></div>
+  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#9CA3AF;opacity:0.85"></div><span>Not Started</span></div>
+  <div class="w-px h-4 bg-gray-300"></div>
+  ${AUDITS.map(a=>`<div class="flex items-center gap-1.5"><div class="w-5 h-3.5 rounded-sm" style="background:${a.color};opacity:0.15;border:1px solid ${a.color}30"></div>${auditIcon(a.color,10)}<span style="color:${a.color};font-weight:600">${a.agency}</span></div>`).join('')}
+  <div class="w-px h-4 bg-gray-300"></div>
+  <div class="flex items-center gap-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEE2E2;color:#B91C1C;font-size:10px;font-weight:600">high</span></div>
+  <div class="flex items-center gap-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEF3C7;color:#B45309;font-size:10px;font-weight:600">med</span></div>
+  <div class="flex items-center gap-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#E0F2FE;color:#0369A1;font-size:10px;font-weight:600">low</span></div>
+`;
+// Mobile legend audits
+document.getElementById('legend-audits-mobile').innerHTML=AUDITS.map(a=>`<div class="flex items-center gap-2"><div class="w-5 h-3.5 rounded-sm" style="background:${a.color};opacity:0.15;border:1px solid ${a.color}30"></div>${auditIcon(a.color,10)}<span style="color:${a.color};font-weight:600">${a.agency}</span></div>`).join('');
 
 // Audit cards
 document.getElementById('audit-cards').innerHTML=AUDITS.map(a=>{
@@ -193,7 +210,7 @@ document.getElementById('audit-cards').innerHTML=AUDITS.map(a=>{
     <div class="detail hidden mt-3 pt-3 border-t" style="border-color:#E5E7EB">
       <p class="text-xs leading-relaxed mb-3" style="color:#4B5563">${a.scope}</p>
       <p class="text-xs font-semibold mb-1">Impacted By:</p>
-      ${impacting.map(p=>`<div class="flex items-center gap-2 text-xs mb-1" style="color:#4B5563">${shieldIcon(a.color,10)}<span>${p.id}: ${p.name}</span>${badge(statusCfg[p.status].label,statusCfg[p.status].bg,statusCfg[p.status].text)}</div>`).join('')}
+      ${impacting.map(p=>`<div class="flex items-center gap-2 text-xs mb-1" style="color:#4B5563">${auditIcon(a.color,10)}<span>${p.id}: ${p.name}</span>${badge(statusCfg[p.status].label,statusCfg[p.status].bg,statusCfg[p.status].text)}</div>`).join('')}
     </div>
   </div>`;
 }).join('');
@@ -231,7 +248,7 @@ function renderTimeline(){
       const bandL=getPos(a.windowStart),bandR=getPos(a.date),bandW=Math.max(2,bandR-bandL);
       const h=`calc((100% - ${totalGap}px) / ${bandCount})`;
       const t=i===0?'0px':`calc(${i} * ((100% - ${totalGap}px) / ${bandCount} + ${gap}px))`;
-      return `<div class="absolute rounded-sm flex items-center overflow-hidden" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};background:${a.color};opacity:0.15;pointer-events:none;z-index:1"></div><div class="absolute flex items-center px-1.5 overflow-hidden" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};pointer-events:none;z-index:2"><span class="text-[9px] font-bold whitespace-nowrap" style="color:${a.color};opacity:0.8">${shieldIcon(a.color,8)} ${a.agency}: ${a.name.replace("2025 ","").split(" ").slice(0,3).join(" ")}</span></div>`;
+      return `<div class="absolute rounded-sm" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};background:${a.color};opacity:0.15;pointer-events:none;z-index:1"></div><div class="absolute flex items-center gap-1 px-1.5 overflow-hidden" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};pointer-events:none;z-index:2">${auditIcon(a.color,9)}<span class="text-[9px] font-bold whitespace-nowrap" style="color:${a.color};opacity:0.85">| ${a.agency}: ${a.name.replace("2025 ","").split(" ").slice(0,4).join(" ")}</span></div>`;
     }).join('');
 
     html+=`<div class="flex border-b cursor-pointer hover:bg-gray-50 transition-colors" style="border-color:#F3F4F6" onclick="this.nextElementSibling.classList.toggle('hidden')">
@@ -251,7 +268,7 @@ function renderTimeline(){
     <div class="hidden bg-gray-50 border-b p-4 pl-6" style="border-color:#F3F4F6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#4B5563">Details</p><p class="text-sm leading-relaxed mb-3" style="color:#4B5563">${p.desc}</p><p class="text-xs" style="color:#4B5563"><span class="font-medium" style="color:#111827">Owner:</span> ${p.owner}</p><p class="text-xs"><span class="font-medium" style="color:#111827">Dept:</span> ${p.dept}</p></div>
-        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#B91C1C">Impacts Audits</p>${pAudits.map(a=>`<div class="flex items-center gap-2 text-xs border rounded-sm p-2 mb-2" style="border-color:#E5E7EB;background:#FFFFFF">${shieldIcon(a.color,12)}<div><p class="font-medium">${a.name}</p><p style="color:#4B5563">${a.agency} — ${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</p></div></div>`).join('')}</div>
+        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#B91C1C">Impacts Audits</p>${pAudits.map(a=>`<div class="flex items-center gap-2 text-xs border rounded-sm p-2 mb-2" style="border-color:#E5E7EB;background:#FFFFFF">${auditIcon(a.color,12)}<div><p class="font-medium">${a.name}</p><p style="color:#4B5563">${a.agency} — ${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</p></div></div>`).join('')}</div>
         <div>
           <p class="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color:#005EB8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/><path d="M12 2a4 4 0 0 0-4 4c0 1.95 1.4 3.58 3.25 3.93"/></svg> AI Impact Analysis</p>
           <button onclick="event.stopPropagation();var r=this.parentElement.querySelector('.ai-response');r.classList.toggle('show');this.textContent=r.classList.contains('show')?'Hide Analysis':'Analyze Audit Impact'" class="text-xs font-medium px-3 py-1.5 rounded-md text-white hover:opacity-90 transition-opacity" style="background:#005EB8">Analyze Audit Impact</button>
