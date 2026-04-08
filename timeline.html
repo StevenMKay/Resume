@@ -10,6 +10,8 @@
   body { font-family: 'IBM Plex Sans', sans-serif; margin: 0; background: #F4F5F7; color: #111827; }
   .guide-popover { display:none; position:absolute; top:100%; left:0; right:0; margin-top:0.5rem; background:#fff; border:1px solid #E5E7EB; border-radius:0.5rem; box-shadow:0 10px 25px -5px rgba(0,0,0,0.1); z-index:40; padding:1.25rem; }
   .guide-popover.show { display:block; }
+  .ai-response { display:none; margin-top:0.75rem; padding:0.75rem; border-radius:0.375rem; background:#F0F9FF; border:1px solid #BAE6FD; }
+  .ai-response.show { display:block; }
 </style>
 </head>
 <body>
@@ -67,11 +69,11 @@
         </div>
         <div>
           <p class="font-semibold mb-1" style="color:#111827">Project Timeline (Gantt Chart)</p>
-          <p>Each row represents a project. The horizontal bar shows start-to-end duration. Small circles on the bar are milestones. The colored vertical shaded bands behind the bars indicate audit deadline dates &mdash; the taller/wider they are, the more visible they are relative to the project. Click any row to expand details.</p>
+          <p>Each project row shows a horizontal bar representing its duration. The shaded colored bands behind the bars represent audit preparation windows &mdash; wider bands mean longer audit periods. Each project also shows shield icons indicating which audits it impacts. Click any row for full details and AI analysis.</p>
         </div>
         <div>
           <p class="font-semibold mb-1" style="color:#111827">Impact Matrix</p>
-          <p>The bottom table maps projects to audits. A colored circle with an arrow means that project directly impacts that audit. A dash means no connection. Use this to quickly identify which projects carry the most audit exposure.</p>
+          <p>The bottom table maps projects to audits. A colored circle with an arrow means that project directly impacts that audit. A dash means no connection.</p>
         </div>
       </div>
     </div>
@@ -88,23 +90,48 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
       <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:#4B5563;font-family:'Chivo'">Project Timeline</h2>
       <div class="flex items-center gap-2">
+        <button onclick="document.getElementById('legend-panel').classList.toggle('hidden');this.querySelector('.chev').classList.toggle('rotate-180')" class="flex items-center gap-1.5 text-xs font-medium border rounded-sm px-2.5 py-1.5 hover:bg-white transition-colors" style="border-color:#E5E7EB;color:#4B5563;background:#FFFFFF">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Legend
+          <svg class="chev transition-transform duration-200" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="w-px h-5 bg-gray-200"></div>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
         <select id="status-filter" onchange="renderTimeline()" class="text-xs border rounded-sm px-2 py-1" style="border-color:#E5E7EB">
           <option value="all">All Status</option><option value="completed">Completed</option><option value="in-progress">In Progress</option><option value="not-started">Not Started</option>
         </select>
       </div>
     </div>
-
-    <!-- Legend -->
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] mb-3 px-1" style="color:#4B5563" id="timeline-legend"></div>
-
+    <div id="legend-panel" class="hidden border rounded-sm mb-3 p-4" style="border-color:#E5E7EB;background:#FFFFFF">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[11px]" style="color:#4B5563">
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-wider mb-2" style="color:#111827">Project Status</p>
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2"><div class="w-5 h-2.5 rounded-sm" style="background:#005EB8;opacity:0.85"></div><span>In Progress</span></div>
+            <div class="flex items-center gap-2"><div class="w-5 h-2.5 rounded-sm" style="background:#047857;opacity:0.85"></div><span>Completed</span></div>
+            <div class="flex items-center gap-2"><div class="w-5 h-2.5 rounded-sm" style="background:#9CA3AF;opacity:0.85"></div><span>Not Started</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-wider mb-2" style="color:#111827">Audit Windows</p>
+          <div class="space-y-1.5" id="legend-audits"></div>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-wider mb-2" style="color:#111827">Priority</p>
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEE2E2;color:#B91C1C;font-size:10px;font-weight:600">high</span><span>High priority</span></div>
+            <div class="flex items-center gap-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEF3C7;color:#B45309;font-size:10px;font-weight:600">med</span><span>Medium priority</span></div>
+            <div class="flex items-center gap-2"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#E0F2FE;color:#0369A1;font-size:10px;font-weight:600">low</span><span>Low priority</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="border rounded-sm overflow-x-auto" style="border-color:#E5E7EB;background:#FFFFFF" id="timeline-container"><div style="min-width:800px" id="timeline-inner"></div></div>
   </section>
 
   <!-- Impact Matrix -->
   <section>
     <h2 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color:#4B5563;font-family:'Chivo'">Project-Audit Impact Matrix</h2>
-    <!-- Matrix Legend -->
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] mb-3 px-1" style="color:#4B5563">
       <span class="font-semibold" style="color:#111827">Legend:</span>
       <div class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-4 h-4 rounded-full text-white" style="background:#005EB8"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span>Project impacts audit</span></div>
@@ -120,39 +147,38 @@ const PROJECTS=[
   {id:"PRJ-002",name:"Balance Transfer Marketing Redesign",status:"in-progress",priority:"medium",dept:"Marketing / Card Products",start:"2025-02-01",end:"2025-05-15",desc:"Redesign targeting criteria for 0% APR balance transfer offers to ensure fair distribution across all demographic segments.",owner:"Marketing Strategy",audits:["AUD-001","AUD-002"],milestones:[{date:"2025-02-01",label:"Current segmentation audit"},{date:"2025-03-01",label:"New criteria design"},{date:"2025-04-15",label:"Fair lending overlay testing"},{date:"2025-05-15",label:"Campaign launch"}]},
   {id:"PRJ-003",name:"Collections Strategy Modernization",status:"not-started",priority:"high",dept:"Collections / Card Servicing",start:"2025-03-01",end:"2025-06-30",desc:"Replace balance-based prioritization with behavioral scoring to reduce disparate impact in contact frequency and channel selection.",owner:"Collections Operations",audits:["AUD-001","AUD-004"],milestones:[{date:"2025-03-01",label:"Current state analysis"},{date:"2025-04-01",label:"Behavioral model design"},{date:"2025-05-15",label:"Pilot testing"},{date:"2025-06-30",label:"Full rollout"}]},
   {id:"PRJ-004",name:"Adverse Action Notice Automation",status:"completed",priority:"high",dept:"Compliance / Technology",start:"2024-10-01",end:"2025-01-31",desc:"Automated generation and QC of adverse action notices with specific principal reasons per Reg B requirements.",owner:"Compliance Engineering",audits:["AUD-001","AUD-002"],milestones:[{date:"2024-10-01",label:"Requirements & template design"},{date:"2024-11-15",label:"System build & integration"},{date:"2024-12-15",label:"UAT & compliance review"},{date:"2025-01-31",label:"Production release"}]},
-  {id:"PRJ-005",name:"Credit Decision Exception Tracking",status:"in-progress",priority:"medium",dept:"Risk Mgmt / Underwriting",start:"2025-01-01",end:"2025-03-31",desc:"Real-time tracking system requiring documented business justification for all credit limit exceptions above standard policy thresholds.",owner:"Risk Operations",audits:["AUD-001","AUD-003"],milestones:[{date:"2025-01-01",label:"Exception criteria definition"},{date:"2025-02-01",label:"System development"},{date:"2025-03-01",label:"Testing & training"},{date:"2025-03-31",label:"Go-live"}]},
-  {id:"PRJ-006",name:"HMDA Data Quality Enhancement",status:"in-progress",priority:"medium",dept:"Data Governance / Compliance",start:"2024-11-01",end:"2025-03-15",desc:"Address geocoding errors and missing demographic data fields identified in 2023 audit. Implement monthly reconciliation and automated validation.",owner:"Data Quality Team",audits:["AUD-002","AUD-004"],milestones:[{date:"2024-11-01",label:"Root cause analysis"},{date:"2025-01-01",label:"System fixes deployed"},{date:"2025-02-15",label:"Validation automation live"},{date:"2025-03-15",label:"Reconciliation process certified"}]},
-  {id:"PRJ-007",name:"Third-Party Vendor Model Monitoring",status:"not-started",priority:"high",dept:"Model Risk Management",start:"2025-04-01",end:"2025-07-31",desc:"Implement real-time drift monitoring for all third-party scoring models used in card credit decisions. Require vendor change notifications.",owner:"Model Governance",audits:["AUD-003","AUD-004"],milestones:[{date:"2025-04-01",label:"Vendor inventory & risk tier"},{date:"2025-05-15",label:"Monitoring framework design"},{date:"2025-06-30",label:"Integration & testing"},{date:"2025-07-31",label:"Monitoring active"}]}
+  {id:"PRJ-005",name:"Credit Decision Exception Tracking",status:"in-progress",priority:"low",dept:"Risk Mgmt / Underwriting",start:"2025-01-01",end:"2025-03-31",desc:"Real-time tracking system requiring documented business justification for all credit limit exceptions above standard policy thresholds.",owner:"Risk Operations",audits:["AUD-001","AUD-003"],milestones:[{date:"2025-01-01",label:"Exception criteria definition"},{date:"2025-02-01",label:"System development"},{date:"2025-03-01",label:"Testing & training"},{date:"2025-03-31",label:"Go-live"}]},
+  {id:"PRJ-006",name:"HMDA Data Quality Enhancement",status:"in-progress",priority:"low",dept:"Data Governance / Compliance",start:"2024-11-01",end:"2025-03-15",desc:"Address geocoding errors and missing demographic data fields identified in 2023 audit. Implement monthly reconciliation and automated validation.",owner:"Data Quality Team",audits:["AUD-002","AUD-004"],milestones:[{date:"2024-11-01",label:"Root cause analysis"},{date:"2025-01-01",label:"System fixes deployed"},{date:"2025-02-15",label:"Validation automation live"},{date:"2025-03-15",label:"Reconciliation process certified"}]},
+  {id:"PRJ-007",name:"Third-Party Vendor Model Monitoring",status:"not-started",priority:"medium",dept:"Model Risk Management",start:"2025-04-01",end:"2025-07-31",desc:"Implement real-time drift monitoring for all third-party scoring models used in card credit decisions. Require vendor change notifications.",owner:"Model Governance",audits:["AUD-003","AUD-004"],milestones:[{date:"2025-04-01",label:"Vendor inventory & risk tier"},{date:"2025-05-15",label:"Monitoring framework design"},{date:"2025-06-30",label:"Integration & testing"},{date:"2025-07-31",label:"Monitoring active"}]}
 ];
 
 const AUDITS=[
-  {id:"AUD-001",name:"2025 Annual Fair Lending Examination",agency:"OCC",type:"Regulatory Exam",date:"2025-06-15",scope:"Full card portfolio fair lending review — underwriting, pricing, servicing, and marketing practices.",color:"#B91C1C"},
-  {id:"AUD-002",name:"ECOA/Reg B Compliance Review",agency:"Internal Audit",type:"Internal Review",date:"2025-04-01",scope:"Adverse action notices, spousal signature requirements, and application processing compliance.",color:"#B45309"},
-  {id:"AUD-003",name:"Model Risk Management Review",agency:"CCOR",type:"2nd Line Review",date:"2025-05-15",scope:"All ML/AI models used in card credit decisions — validation, documentation, and fair lending testing.",color:"#7C3AED"},
-  {id:"AUD-004",name:"Data Governance & HMDA Accuracy Audit",agency:"Internal Audit",type:"Internal Review",date:"2025-07-01",scope:"HMDA-reportable data accuracy, geocoding, demographic data completeness, and vendor data quality.",color:"#047857"}
+  {id:"AUD-001",name:"2025 Annual Fair Lending Examination",agency:"OCC",type:"Regulatory Exam",date:"2025-06-15",windowStart:"2024-12-15",scope:"Full card portfolio fair lending review — underwriting, pricing, servicing, and marketing practices.",color:"#B91C1C"},
+  {id:"AUD-002",name:"ECOA/Reg B Compliance Review",agency:"Internal Audit",type:"Internal Review",date:"2025-04-01",windowStart:"2025-02-01",scope:"Adverse action notices, spousal signature requirements, and application processing compliance.",color:"#B45309"},
+  {id:"AUD-003",name:"Model Risk Management Review",agency:"CCOR",type:"2nd Line Review",date:"2025-05-15",windowStart:"2025-02-15",scope:"All ML/AI models used in card credit decisions — validation, documentation, and fair lending testing.",color:"#7C3AED"},
+  {id:"AUD-004",name:"Data Governance & HMDA Accuracy Audit",agency:"Internal Audit",type:"Internal Review",date:"2025-07-01",windowStart:"2025-03-01",scope:"HMDA-reportable data accuracy, geocoding, demographic data completeness, and vendor data quality.",color:"#047857"}
 ];
+
+const AI_RESPONSES={
+  "PRJ-001":"This project carries HIGH regulatory exposure. The AI credit limit model directly feeds into underwriting decisions reviewed during the OCC Fair Lending Exam. Key risk: if the model produces disparate impact across protected classes, it could trigger an MRA (Matter Requiring Attention). Recommendation: Complete fair lending testing before Apr 30 to allow remediation time before the Jun 15 OCC exam. The CCOR Model Risk review will evaluate documentation completeness — ensure model cards and validation reports are current.",
+  "PRJ-002":"MEDIUM exposure. Marketing targeting criteria are a known focus area for ECOA/Reg B reviews. The redesign must demonstrate equitable distribution of 0% APR offers. Risk: if balance transfer offers disproportionately exclude any demographic segment, this could surface as a finding in the Apr 1 Internal Audit. Recommendation: Run statistical parity analysis on the new targeting criteria before campaign launch.",
+  "PRJ-003":"HIGH exposure with compounding risk. Collections strategy changes affect both the OCC exam (contact frequency patterns) and HMDA data quality (servicing records). The behavioral scoring model must be validated for fair lending compliance. Late start (Mar 1) leaves minimal buffer before the Jun 15 OCC exam. Recommendation: Prioritize the pilot testing phase and document all model validation results.",
+  "PRJ-004":"LOW residual risk — project is completed. However, the automated adverse action notices are a primary deliverable for the ECOA/Reg B review on Apr 1. Ensure QC monitoring continues and no regressions have occurred since Jan 31 deployment. Recommendation: Run a sample audit of recent notices to confirm compliance.",
+  "PRJ-005":"LOW-MEDIUM exposure. Exception tracking is an enabler for demonstrating compliance controls. The OCC exam will review whether credit limit exceptions have documented justification. Risk: if the system isn't live by Mar 31, manual exception tracking must be maintained. The CCOR review will assess whether the system's logic properly captures all threshold breaches.",
+  "PRJ-006":"MEDIUM exposure. HMDA data accuracy is the central focus of the Jul 1 Data Governance audit. Geocoding errors and missing demographic fields from the 2023 findings must show measurable improvement. Risk: if the monthly reconciliation isn't certified by Mar 15, the Jul 1 audit could flag insufficient remediation. The ECOA/Reg B review may also reference data quality as a contributing factor.",
+  "PRJ-007":"HIGH future exposure. While the project doesn't start until Apr 1, third-party vendor models are a growing regulatory focus. The CCOR review on May 15 will assess the current state of vendor model governance — having the monitoring framework designed by then would demonstrate proactive risk management. The Jul 1 HMDA audit may also examine vendor-sourced data accuracy."
+};
 
 const TL_START=new Date("2024-10-01"),TL_END=new Date("2025-08-31");
 const statusCfg={"completed":{label:"Completed",bg:"#D1FAE5",text:"#047857",bar:"#047857"},"in-progress":{label:"In Progress",bg:"#DBEAFE",text:"#1D4ED8",bar:"#005EB8"},"not-started":{label:"Not Started",bg:"#F3F4F6",text:"#4B5563",bar:"#9CA3AF"}};
-const prioCfg={"high":{bg:"#FEE2E2",text:"#B91C1C"},"medium":{bg:"#FEF3C7",text:"#B45309"}};
+const prioCfg={"high":{bg:"#FEE2E2",text:"#B91C1C"},"medium":{bg:"#FEF3C7",text:"#B45309"},"low":{bg:"#E0F2FE",text:"#0369A1"}};
 
 function badge(label,bg,text){return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap" style="background:${bg};color:${text}">${label}</span>`;}
 function getPos(d){return Math.max(0,Math.min(100,((new Date(d)-TL_START)/(TL_END-TL_START))*100));}
+function shieldIcon(color,s){return `<svg width="${s||10}" height="${s||10}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;}
 
-// Legend
-document.getElementById('timeline-legend').innerHTML=`
-  <span class="font-semibold" style="color:#111827">Legend:</span>
-  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#005EB8;opacity:0.85"></div><span>In Progress</span></div>
-  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#047857;opacity:0.85"></div><span>Completed</span></div>
-  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#9CA3AF;opacity:0.85"></div><span>Not Started</span></div>
-  <div class="w-px h-4 bg-gray-300"></div>
-  <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full" style="background:#005EB8;border:2px solid white;box-shadow:0 0 0 1px #005EB8"></div><span>Milestone</span></div>
-  <div class="w-px h-4 bg-gray-300"></div>
-  ${AUDITS.map(a=>`<div class="flex items-center gap-1.5"><div class="w-5 h-4 rounded-sm" style="background:${a.color};opacity:0.12;border:1px solid ${a.color}30"></div><span style="color:${a.color};font-weight:600">${a.agency}</span> <span>audit window</span></div>`).join('')}
-  <div class="w-px h-4 bg-gray-300"></div>
-  <div class="flex items-center gap-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEE2E2;color:#B91C1C;font-size:10px;font-weight:600">high</span><span>High priority</span></div>
-  <div class="flex items-center gap-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEF3C7;color:#B45309;font-size:10px;font-weight:600">med</span><span>Medium priority</span></div>
-`;
+// Legend - audit windows column
+document.getElementById('legend-audits').innerHTML=AUDITS.map(a=>`<div class="flex items-center gap-2"><div class="w-5 h-3.5 rounded-sm" style="background:${a.color};opacity:0.15;border:1px solid ${a.color}30"></div>${shieldIcon(a.color,10)}<span style="color:${a.color};font-weight:600">${a.agency}</span></div>`).join('');
 
 // Audit cards
 document.getElementById('audit-cards').innerHTML=AUDITS.map(a=>{
@@ -167,7 +193,7 @@ document.getElementById('audit-cards').innerHTML=AUDITS.map(a=>{
     <div class="detail hidden mt-3 pt-3 border-t" style="border-color:#E5E7EB">
       <p class="text-xs leading-relaxed mb-3" style="color:#4B5563">${a.scope}</p>
       <p class="text-xs font-semibold mb-1">Impacted By:</p>
-      ${impacting.map(p=>`<div class="flex items-center gap-2 text-xs mb-1" style="color:#4B5563"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${a.color}" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>${p.id}: ${p.name}</span>${badge(statusCfg[p.status].label,statusCfg[p.status].bg,statusCfg[p.status].text)}</div>`).join('')}
+      ${impacting.map(p=>`<div class="flex items-center gap-2 text-xs mb-1" style="color:#4B5563">${shieldIcon(a.color,10)}<span>${p.id}: ${p.name}</span>${badge(statusCfg[p.status].label,statusCfg[p.status].bg,statusCfg[p.status].text)}</div>`).join('')}
     </div>
   </div>`;
 }).join('');
@@ -181,7 +207,6 @@ function renderTimeline(){
   while(cur<=TL_END){months.push(new Date(cur));cur.setMonth(cur.getMonth()+1);}
   const now=new Date();
 
-  // Month header
   let html=`<div class="flex border-b" style="border-color:#E5E7EB">
     <div class="w-72 flex-shrink-0 p-3 border-r text-xs font-semibold uppercase tracking-wider" style="border-color:#E5E7EB;color:#4B5563;background:#F9FAFB">Project</div>
     <div class="flex-1 flex">${months.map(m=>{
@@ -190,47 +215,23 @@ function renderTimeline(){
     }).join('')}</div>
   </div>`;
 
-  // Audit date rows at the top
-  AUDITS.forEach(a=>{
-    const pos=getPos(a.date);
-    const impactCount=PROJECTS.filter(p=>p.audits.includes(a.id)).length;
-    html+=`<div class="flex border-b" style="border-color:#F3F4F6;background:${a.color}06">
-      <div class="w-72 flex-shrink-0 p-2 border-r flex items-center gap-2" style="border-color:#E5E7EB">
-        <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${a.color}"></div>
-        <div class="min-w-0 flex-1">
-          <p class="text-xs font-semibold truncate" style="color:${a.color}">${a.agency}: ${a.name.replace("2025 ","")}</p>
-          <p class="text-[10px]" style="color:#4B5563">${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} &middot; ${impactCount} project${impactCount!==1?'s':''}</p>
-        </div>
-      </div>
-      <div class="flex-1 relative py-2 px-1">
-        <div class="absolute top-0 bottom-0 rounded-sm" style="left:${Math.max(0,pos-2)}%;width:4%;background:${a.color};opacity:0.12;pointer-events:none"></div>
-        <div class="absolute top-0 bottom-0 w-px" style="left:${pos}%;background:${a.color};opacity:0.4"></div>
-        <div class="absolute top-1/2 -translate-y-1/2 flex items-center gap-1" style="left:${pos+1.5}%">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${a.color}" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span class="text-[10px] font-semibold whitespace-nowrap" style="color:${a.color}">${a.type}</span>
-        </div>
-      </div>
-    </div>`;
-  });
-
-  // Separator
-  html+=`<div class="flex border-b-2" style="border-color:#E5E7EB">
-    <div class="w-72 flex-shrink-0 p-1 border-r" style="border-color:#E5E7EB;background:#F9FAFB"></div>
-    <div class="flex-1 p-1" style="background:#F9FAFB"></div>
-  </div>`;
-
-  // Project rows
-  filtered.forEach(p=>{
+  // Project rows (no audit rows at top — audit info moved into project rows)
+  filtered.forEach((p,idx)=>{
     const barL=getPos(p.start),barR=getPos(p.end),barW=Math.max(2,barR-barL);
     const barColor=statusCfg[p.status].bar;
     const pc=prioCfg[p.priority];
     const sc=statusCfg[p.status];
+    const pAudits=AUDITS.filter(a=>p.audits.includes(a.id));
 
-    // Build audit shaded bands — tall colored bars behind the project bar
-    const auditBands=AUDITS.filter(a=>p.audits.includes(a.id)).map(a=>{
-      const pos=getPos(a.date);
-      return `<div class="absolute rounded-sm" style="left:${Math.max(0,pos-2)}%;width:4%;top:-2px;bottom:-2px;background:${a.color};opacity:0.10;pointer-events:none;z-index:1"></div>
-              <div class="absolute w-px" style="left:${pos}%;top:0;bottom:0;background:${a.color};opacity:0.25;pointer-events:none;z-index:1"></div>`;
+    // Audit bands — stacked vertically, robust for any count
+    const bandCount=pAudits.length;
+    const gap=bandCount>1?2:0;
+    const totalGap=(bandCount-1)*gap;
+    const auditBands=pAudits.map((a,i)=>{
+      const bandL=getPos(a.windowStart),bandR=getPos(a.date),bandW=Math.max(2,bandR-bandL);
+      const h=`calc((100% - ${totalGap}px) / ${bandCount})`;
+      const t=i===0?'0px':`calc(${i} * ((100% - ${totalGap}px) / ${bandCount} + ${gap}px))`;
+      return `<div class="absolute rounded-sm flex items-center overflow-hidden" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};background:${a.color};opacity:0.15;pointer-events:none;z-index:1"></div><div class="absolute flex items-center px-1.5 overflow-hidden" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};pointer-events:none;z-index:2"><span class="text-[9px] font-bold whitespace-nowrap" style="color:${a.color};opacity:0.8">${shieldIcon(a.color,8)} ${a.agency}: ${a.name.replace("2025 ","").split(" ").slice(0,3).join(" ")}</span></div>`;
     }).join('');
 
     html+=`<div class="flex border-b cursor-pointer hover:bg-gray-50 transition-colors" style="border-color:#F3F4F6" onclick="this.nextElementSibling.classList.toggle('hidden')">
@@ -245,14 +246,17 @@ function renderTimeline(){
       <div class="flex-1 relative py-3 px-1" style="overflow:hidden">
         ${auditBands}
         <div class="absolute top-1/2 -translate-y-1/2 h-6 rounded-sm flex items-center px-2" style="left:${barL}%;width:${barW}%;background:${barColor};opacity:0.85;z-index:5"><span class="text-[10px] font-medium text-white truncate">${p.name}</span></div>
-        ${p.milestones.map(ms=>`<div class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border-2 border-white" style="left:${getPos(ms.date)}%;background:${barColor};pointer-events:none;z-index:6" title="${ms.label}"></div>`).join('')}
       </div>
     </div>
     <div class="hidden bg-gray-50 border-b p-4 pl-6" style="border-color:#F3F4F6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#4B5563">Details</p><p class="text-sm leading-relaxed mb-3" style="color:#4B5563">${p.desc}</p><p class="text-xs" style="color:#4B5563"><span class="font-medium" style="color:#111827">Owner:</span> ${p.owner}</p><p class="text-xs"><span class="font-medium" style="color:#111827">Dept:</span> ${p.dept}</p></div>
-        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#4B5563">Milestones</p>${p.milestones.map(ms=>`<div class="flex items-center gap-2 text-xs mb-1"><span class="w-20" style="font-family:'IBM Plex Mono';color:#9CA3AF">${ms.date.slice(5)}</span><span>${ms.label}</span></div>`).join('')}</div>
-        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#B91C1C">Impacts Audits</p>${AUDITS.filter(a=>p.audits.includes(a.id)).map(a=>`<div class="flex items-center gap-2 text-xs border rounded-sm p-2 mb-1" style="border-color:#E5E7EB;background:#FFFFFF"><div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${a.color}"></div><div><p class="font-medium">${a.name}</p><p style="color:#4B5563">${a.agency} — ${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</p></div></div>`).join('')}</div>
+        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#B91C1C">Impacts Audits</p>${pAudits.map(a=>`<div class="flex items-center gap-2 text-xs border rounded-sm p-2 mb-2" style="border-color:#E5E7EB;background:#FFFFFF">${shieldIcon(a.color,12)}<div><p class="font-medium">${a.name}</p><p style="color:#4B5563">${a.agency} — ${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</p></div></div>`).join('')}</div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color:#005EB8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/><path d="M12 2a4 4 0 0 0-4 4c0 1.95 1.4 3.58 3.25 3.93"/></svg> AI Impact Analysis</p>
+          <button onclick="event.stopPropagation();var r=this.parentElement.querySelector('.ai-response');r.classList.toggle('show');this.textContent=r.classList.contains('show')?'Hide Analysis':'Analyze Audit Impact'" class="text-xs font-medium px-3 py-1.5 rounded-md text-white hover:opacity-90 transition-opacity" style="background:#005EB8">Analyze Audit Impact</button>
+          <div class="ai-response"><p class="text-xs leading-relaxed" style="color:#0369A1">${AI_RESPONSES[p.id]||'Analysis not available for this project.'}</p></div>
+        </div>
       </div>
     </div>`;
   });
@@ -268,8 +272,6 @@ document.getElementById('matrix-container').innerHTML=`<table class="w-full text
 </tbody></table>`;
 
 renderTimeline();
-
-// Close menus on outside click
 document.addEventListener('click',function(e){
   if(!e.target.closest('.sm\\:hidden')){var m=document.getElementById('mobile-nav-tl');if(m)m.classList.add('hidden');}
   if(!e.target.closest('#guide-wrapper')){document.getElementById('guide-box').classList.remove('show');}
