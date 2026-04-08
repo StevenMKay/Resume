@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Timeline & Audit Impact</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'IBM Plex Sans', sans-serif; margin: 0; background: #F4F5F7; color: #111827; }
+  .guide-popover { display:none; position:absolute; top:100%; left:0; right:0; margin-top:0.5rem; background:#fff; border:1px solid #E5E7EB; border-radius:0.5rem; box-shadow:0 10px 25px -5px rgba(0,0,0,0.1); z-index:40; padding:1.25rem; }
+  .guide-popover.show { display:block; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-white border-b" style="border-color:#E5E7EB">
+  <div class="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
+    <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+      <a href="index.html" class="flex items-center gap-1 text-sm font-medium hover:opacity-70 flex-shrink-0" style="color:#005EB8">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg><span class="hidden sm:inline">90-Day Plan</span>
+      </a>
+      <div class="w-px h-6 bg-gray-200 hidden sm:block"></div>
+      <div class="flex items-center gap-2 min-w-0">
+        <svg class="flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <h1 class="text-sm sm:text-base font-semibold tracking-tight truncate" style="font-family:'Chivo'">Project Timeline & Audit Impact</h1>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-3">
+      <a href="risk-assessor.html" class="text-xs font-medium px-3 py-1.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563">Risk Assessor</a>
+      <a href="audit-dashboard.html" class="text-xs font-medium px-3 py-1.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563">Audit Dashboard</a>
+    </div>
+    <div class="sm:hidden relative">
+      <button onclick="document.getElementById('mobile-nav-tl').classList.toggle('hidden')" class="p-2 rounded-sm hover:bg-gray-100">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div id="mobile-nav-tl" class="hidden absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-50 py-2 min-w-[160px]" style="border-color:#E5E7EB">
+        <a href="index.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#005EB8">90-Day Plan</a>
+        <a href="risk-assessor.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#4B5563">Risk Assessor</a>
+        <a href="audit-dashboard.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#4B5563">Audit Dashboard</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+  <!-- How to Read This Page -->
+  <div class="relative" id="guide-wrapper">
+    <button onclick="document.getElementById('guide-box').classList.toggle('show')" class="flex items-center gap-2 px-3 py-2 rounded-md border hover:bg-white transition-colors text-xs font-medium" style="border-color:#E5E7EB;color:#005EB8;background:#FFFFFF">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      How to Read This Page
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div id="guide-box" class="guide-popover">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold" style="color:#0A2F6B;font-family:'Chivo'">Reading Guide</h3>
+        <button onclick="document.getElementById('guide-box').classList.remove('show')" class="text-gray-400 hover:text-gray-600">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs leading-relaxed" style="color:#4B5563">
+        <div>
+          <p class="font-semibold mb-1" style="color:#111827">Audit & Exam Cards</p>
+          <p>The top section shows upcoming audits and exams. Click any card to expand it and see which projects are linked to that audit. The left-side color stripe matches the audit's color used throughout the page.</p>
+        </div>
+        <div>
+          <p class="font-semibold mb-1" style="color:#111827">Project Timeline (Gantt Chart)</p>
+          <p>Each row represents a project. The horizontal bar shows start-to-end duration. Small circles on the bar are milestones. The colored vertical shaded bands behind the bars indicate audit deadline dates &mdash; the taller/wider they are, the more visible they are relative to the project. Click any row to expand details.</p>
+        </div>
+        <div>
+          <p class="font-semibold mb-1" style="color:#111827">Impact Matrix</p>
+          <p>The bottom table maps projects to audits. A colored circle with an arrow means that project directly impacts that audit. A dash means no connection. Use this to quickly identify which projects carry the most audit exposure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Audits -->
+  <section>
+    <h2 class="text-sm font-semibold uppercase tracking-wider mb-4" style="color:#4B5563;font-family:'Chivo'">Upcoming Audits & Exams</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="audit-cards"></div>
+  </section>
+
+  <!-- Project Timeline -->
+  <section>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+      <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:#4B5563;font-family:'Chivo'">Project Timeline</h2>
+      <div class="flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <select id="status-filter" onchange="renderTimeline()" class="text-xs border rounded-sm px-2 py-1" style="border-color:#E5E7EB">
+          <option value="all">All Status</option><option value="completed">Completed</option><option value="in-progress">In Progress</option><option value="not-started">Not Started</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] mb-3 px-1" style="color:#4B5563" id="timeline-legend"></div>
+
+    <div class="border rounded-sm overflow-x-auto" style="border-color:#E5E7EB;background:#FFFFFF" id="timeline-container"><div style="min-width:800px" id="timeline-inner"></div></div>
+  </section>
+
+  <!-- Impact Matrix -->
+  <section>
+    <h2 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color:#4B5563;font-family:'Chivo'">Project-Audit Impact Matrix</h2>
+    <!-- Matrix Legend -->
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] mb-3 px-1" style="color:#4B5563">
+      <span class="font-semibold" style="color:#111827">Legend:</span>
+      <div class="flex items-center gap-1.5"><span class="inline-flex items-center justify-center w-4 h-4 rounded-full text-white" style="background:#005EB8"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span>Project impacts audit</span></div>
+      <div class="flex items-center gap-1.5"><span style="color:#E5E7EB;font-weight:700">&mdash;</span><span>No connection</span></div>
+    </div>
+    <div class="border rounded-sm overflow-x-auto" style="border-color:#E5E7EB;background:#FFFFFF" id="matrix-container"></div>
+  </section>
+</main>
+
+<script>
+const PROJECTS=[
+  {id:"PRJ-001",name:"AI Credit Limit Optimization Engine",status:"in-progress",priority:"high",dept:"Data Science / Card Lending",start:"2025-01-15",end:"2025-04-30",desc:"ML model for dynamic credit limit adjustments using transaction patterns, payment behavior, and external economic indicators.",owner:"Analytics Team",audits:["AUD-001","AUD-003"],milestones:[{date:"2025-01-15",label:"Kickoff & data collection"},{date:"2025-02-15",label:"Model development complete"},{date:"2025-03-15",label:"Fair lending testing & validation"},{date:"2025-04-30",label:"Production deployment"}]},
+  {id:"PRJ-002",name:"Balance Transfer Marketing Redesign",status:"in-progress",priority:"medium",dept:"Marketing / Card Products",start:"2025-02-01",end:"2025-05-15",desc:"Redesign targeting criteria for 0% APR balance transfer offers to ensure fair distribution across all demographic segments.",owner:"Marketing Strategy",audits:["AUD-001","AUD-002"],milestones:[{date:"2025-02-01",label:"Current segmentation audit"},{date:"2025-03-01",label:"New criteria design"},{date:"2025-04-15",label:"Fair lending overlay testing"},{date:"2025-05-15",label:"Campaign launch"}]},
+  {id:"PRJ-003",name:"Collections Strategy Modernization",status:"not-started",priority:"high",dept:"Collections / Card Servicing",start:"2025-03-01",end:"2025-06-30",desc:"Replace balance-based prioritization with behavioral scoring to reduce disparate impact in contact frequency and channel selection.",owner:"Collections Operations",audits:["AUD-001","AUD-004"],milestones:[{date:"2025-03-01",label:"Current state analysis"},{date:"2025-04-01",label:"Behavioral model design"},{date:"2025-05-15",label:"Pilot testing"},{date:"2025-06-30",label:"Full rollout"}]},
+  {id:"PRJ-004",name:"Adverse Action Notice Automation",status:"completed",priority:"high",dept:"Compliance / Technology",start:"2024-10-01",end:"2025-01-31",desc:"Automated generation and QC of adverse action notices with specific principal reasons per Reg B requirements.",owner:"Compliance Engineering",audits:["AUD-001","AUD-002"],milestones:[{date:"2024-10-01",label:"Requirements & template design"},{date:"2024-11-15",label:"System build & integration"},{date:"2024-12-15",label:"UAT & compliance review"},{date:"2025-01-31",label:"Production release"}]},
+  {id:"PRJ-005",name:"Credit Decision Exception Tracking",status:"in-progress",priority:"medium",dept:"Risk Mgmt / Underwriting",start:"2025-01-01",end:"2025-03-31",desc:"Real-time tracking system requiring documented business justification for all credit limit exceptions above standard policy thresholds.",owner:"Risk Operations",audits:["AUD-001","AUD-003"],milestones:[{date:"2025-01-01",label:"Exception criteria definition"},{date:"2025-02-01",label:"System development"},{date:"2025-03-01",label:"Testing & training"},{date:"2025-03-31",label:"Go-live"}]},
+  {id:"PRJ-006",name:"HMDA Data Quality Enhancement",status:"in-progress",priority:"medium",dept:"Data Governance / Compliance",start:"2024-11-01",end:"2025-03-15",desc:"Address geocoding errors and missing demographic data fields identified in 2023 audit. Implement monthly reconciliation and automated validation.",owner:"Data Quality Team",audits:["AUD-002","AUD-004"],milestones:[{date:"2024-11-01",label:"Root cause analysis"},{date:"2025-01-01",label:"System fixes deployed"},{date:"2025-02-15",label:"Validation automation live"},{date:"2025-03-15",label:"Reconciliation process certified"}]},
+  {id:"PRJ-007",name:"Third-Party Vendor Model Monitoring",status:"not-started",priority:"high",dept:"Model Risk Management",start:"2025-04-01",end:"2025-07-31",desc:"Implement real-time drift monitoring for all third-party scoring models used in card credit decisions. Require vendor change notifications.",owner:"Model Governance",audits:["AUD-003","AUD-004"],milestones:[{date:"2025-04-01",label:"Vendor inventory & risk tier"},{date:"2025-05-15",label:"Monitoring framework design"},{date:"2025-06-30",label:"Integration & testing"},{date:"2025-07-31",label:"Monitoring active"}]}
+];
+
+const AUDITS=[
+  {id:"AUD-001",name:"2025 Annual Fair Lending Examination",agency:"OCC",type:"Regulatory Exam",date:"2025-06-15",scope:"Full card portfolio fair lending review — underwriting, pricing, servicing, and marketing practices.",color:"#B91C1C"},
+  {id:"AUD-002",name:"ECOA/Reg B Compliance Review",agency:"Internal Audit",type:"Internal Review",date:"2025-04-01",scope:"Adverse action notices, spousal signature requirements, and application processing compliance.",color:"#B45309"},
+  {id:"AUD-003",name:"Model Risk Management Review",agency:"CCOR",type:"2nd Line Review",date:"2025-05-15",scope:"All ML/AI models used in card credit decisions — validation, documentation, and fair lending testing.",color:"#7C3AED"},
+  {id:"AUD-004",name:"Data Governance & HMDA Accuracy Audit",agency:"Internal Audit",type:"Internal Review",date:"2025-07-01",scope:"HMDA-reportable data accuracy, geocoding, demographic data completeness, and vendor data quality.",color:"#047857"}
+];
+
+const TL_START=new Date("2024-10-01"),TL_END=new Date("2025-08-31");
+const statusCfg={"completed":{label:"Completed",bg:"#D1FAE5",text:"#047857",bar:"#047857"},"in-progress":{label:"In Progress",bg:"#DBEAFE",text:"#1D4ED8",bar:"#005EB8"},"not-started":{label:"Not Started",bg:"#F3F4F6",text:"#4B5563",bar:"#9CA3AF"}};
+const prioCfg={"high":{bg:"#FEE2E2",text:"#B91C1C"},"medium":{bg:"#FEF3C7",text:"#B45309"}};
+
+function badge(label,bg,text){return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap" style="background:${bg};color:${text}">${label}</span>`;}
+function getPos(d){return Math.max(0,Math.min(100,((new Date(d)-TL_START)/(TL_END-TL_START))*100));}
+
+// Legend
+document.getElementById('timeline-legend').innerHTML=`
+  <span class="font-semibold" style="color:#111827">Legend:</span>
+  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#005EB8;opacity:0.85"></div><span>In Progress</span></div>
+  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#047857;opacity:0.85"></div><span>Completed</span></div>
+  <div class="flex items-center gap-1.5"><div class="w-5 h-2.5 rounded-sm" style="background:#9CA3AF;opacity:0.85"></div><span>Not Started</span></div>
+  <div class="w-px h-4 bg-gray-300"></div>
+  <div class="flex items-center gap-1.5"><div class="w-2 h-2 rounded-full" style="background:#005EB8;border:2px solid white;box-shadow:0 0 0 1px #005EB8"></div><span>Milestone</span></div>
+  <div class="w-px h-4 bg-gray-300"></div>
+  ${AUDITS.map(a=>`<div class="flex items-center gap-1.5"><div class="w-5 h-4 rounded-sm" style="background:${a.color};opacity:0.12;border:1px solid ${a.color}30"></div><span style="color:${a.color};font-weight:600">${a.agency}</span> <span>audit window</span></div>`).join('')}
+  <div class="w-px h-4 bg-gray-300"></div>
+  <div class="flex items-center gap-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEE2E2;color:#B91C1C;font-size:10px;font-weight:600">high</span><span>High priority</span></div>
+  <div class="flex items-center gap-1.5"><span class="inline-flex items-center px-1.5 py-0.5 rounded-full" style="background:#FEF3C7;color:#B45309;font-size:10px;font-weight:600">med</span><span>Medium priority</span></div>
+`;
+
+// Audit cards
+document.getElementById('audit-cards').innerHTML=AUDITS.map(a=>{
+  const impacting=PROJECTS.filter(p=>p.audits.includes(a.id));
+  return `<div class="text-left border rounded-sm p-4 hover:shadow-sm transition-all cursor-pointer" style="border-color:#E5E7EB;background:#FFFFFF;border-left:3px solid ${a.color}" onclick="this.querySelector('.detail').classList.toggle('hidden')">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-xs font-bold uppercase tracking-wider" style="color:${a.color}">${a.agency}</span>
+      <span class="text-xs font-medium" style="color:#4B5563">${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</span>
+    </div>
+    <p class="text-sm font-semibold mb-1">${a.name}</p>
+    <p class="text-xs" style="color:#4B5563">${a.type}</p>
+    <div class="detail hidden mt-3 pt-3 border-t" style="border-color:#E5E7EB">
+      <p class="text-xs leading-relaxed mb-3" style="color:#4B5563">${a.scope}</p>
+      <p class="text-xs font-semibold mb-1">Impacted By:</p>
+      ${impacting.map(p=>`<div class="flex items-center gap-2 text-xs mb-1" style="color:#4B5563"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${a.color}" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>${p.id}: ${p.name}</span>${badge(statusCfg[p.status].label,statusCfg[p.status].bg,statusCfg[p.status].text)}</div>`).join('')}
+    </div>
+  </div>`;
+}).join('');
+
+// Timeline
+function renderTimeline(){
+  const filter=document.getElementById('status-filter').value;
+  const filtered=filter==="all"?PROJECTS:PROJECTS.filter(p=>p.status===filter);
+  const months=[];
+  const cur=new Date(TL_START.getFullYear(),TL_START.getMonth(),1);
+  while(cur<=TL_END){months.push(new Date(cur));cur.setMonth(cur.getMonth()+1);}
+  const now=new Date();
+
+  // Month header
+  let html=`<div class="flex border-b" style="border-color:#E5E7EB">
+    <div class="w-72 flex-shrink-0 p-3 border-r text-xs font-semibold uppercase tracking-wider" style="border-color:#E5E7EB;color:#4B5563;background:#F9FAFB">Project</div>
+    <div class="flex-1 flex">${months.map(m=>{
+      const isNow=m.getMonth()===now.getMonth()&&m.getFullYear()===now.getFullYear();
+      return `<div class="flex-1 p-2 text-center text-xs font-medium border-r" style="border-color:#F3F4F6;color:${isNow?'#005EB8':'#4B5563'};background:${isNow?'#EFF6FF':'#F9FAFB'};font-weight:${isNow?700:500}">${m.toLocaleDateString("en-US",{month:"short"})} ${m.getFullYear().toString().slice(2)}</div>`;
+    }).join('')}</div>
+  </div>`;
+
+  // Audit date rows at the top
+  AUDITS.forEach(a=>{
+    const pos=getPos(a.date);
+    const impactCount=PROJECTS.filter(p=>p.audits.includes(a.id)).length;
+    html+=`<div class="flex border-b" style="border-color:#F3F4F6;background:${a.color}06">
+      <div class="w-72 flex-shrink-0 p-2 border-r flex items-center gap-2" style="border-color:#E5E7EB">
+        <div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${a.color}"></div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-semibold truncate" style="color:${a.color}">${a.agency}: ${a.name.replace("2025 ","")}</p>
+          <p class="text-[10px]" style="color:#4B5563">${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} &middot; ${impactCount} project${impactCount!==1?'s':''}</p>
+        </div>
+      </div>
+      <div class="flex-1 relative py-2 px-1">
+        <div class="absolute top-0 bottom-0 rounded-sm" style="left:${Math.max(0,pos-2)}%;width:4%;background:${a.color};opacity:0.12;pointer-events:none"></div>
+        <div class="absolute top-0 bottom-0 w-px" style="left:${pos}%;background:${a.color};opacity:0.4"></div>
+        <div class="absolute top-1/2 -translate-y-1/2 flex items-center gap-1" style="left:${pos+1.5}%">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${a.color}" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="text-[10px] font-semibold whitespace-nowrap" style="color:${a.color}">${a.type}</span>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // Separator
+  html+=`<div class="flex border-b-2" style="border-color:#E5E7EB">
+    <div class="w-72 flex-shrink-0 p-1 border-r" style="border-color:#E5E7EB;background:#F9FAFB"></div>
+    <div class="flex-1 p-1" style="background:#F9FAFB"></div>
+  </div>`;
+
+  // Project rows
+  filtered.forEach(p=>{
+    const barL=getPos(p.start),barR=getPos(p.end),barW=Math.max(2,barR-barL);
+    const barColor=statusCfg[p.status].bar;
+    const pc=prioCfg[p.priority];
+    const sc=statusCfg[p.status];
+
+    // Build audit shaded bands — tall colored bars behind the project bar
+    const auditBands=AUDITS.filter(a=>p.audits.includes(a.id)).map(a=>{
+      const pos=getPos(a.date);
+      return `<div class="absolute rounded-sm" style="left:${Math.max(0,pos-2)}%;width:4%;top:-2px;bottom:-2px;background:${a.color};opacity:0.10;pointer-events:none;z-index:1"></div>
+              <div class="absolute w-px" style="left:${pos}%;top:0;bottom:0;background:${a.color};opacity:0.25;pointer-events:none;z-index:1"></div>`;
+    }).join('');
+
+    html+=`<div class="flex border-b cursor-pointer hover:bg-gray-50 transition-colors" style="border-color:#F3F4F6" onclick="this.nextElementSibling.classList.toggle('hidden')">
+      <div class="w-72 flex-shrink-0 p-3 border-r flex items-center gap-2" style="border-color:#E5E7EB">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2 mb-1"><span class="text-xs" style="font-family:'IBM Plex Mono';color:#9CA3AF">${p.id}</span>${badge(p.priority,pc.bg,pc.text)}</div>
+          <p class="text-sm font-medium truncate">${p.name}</p>
+          <div class="mt-1">${badge(sc.label,sc.bg,sc.text)}</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="flex-1 relative py-3 px-1" style="overflow:hidden">
+        ${auditBands}
+        <div class="absolute top-1/2 -translate-y-1/2 h-6 rounded-sm flex items-center px-2" style="left:${barL}%;width:${barW}%;background:${barColor};opacity:0.85;z-index:5"><span class="text-[10px] font-medium text-white truncate">${p.name}</span></div>
+        ${p.milestones.map(ms=>`<div class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border-2 border-white" style="left:${getPos(ms.date)}%;background:${barColor};pointer-events:none;z-index:6" title="${ms.label}"></div>`).join('')}
+      </div>
+    </div>
+    <div class="hidden bg-gray-50 border-b p-4 pl-6" style="border-color:#F3F4F6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#4B5563">Details</p><p class="text-sm leading-relaxed mb-3" style="color:#4B5563">${p.desc}</p><p class="text-xs" style="color:#4B5563"><span class="font-medium" style="color:#111827">Owner:</span> ${p.owner}</p><p class="text-xs"><span class="font-medium" style="color:#111827">Dept:</span> ${p.dept}</p></div>
+        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#4B5563">Milestones</p>${p.milestones.map(ms=>`<div class="flex items-center gap-2 text-xs mb-1"><span class="w-20" style="font-family:'IBM Plex Mono';color:#9CA3AF">${ms.date.slice(5)}</span><span>${ms.label}</span></div>`).join('')}</div>
+        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#B91C1C">Impacts Audits</p>${AUDITS.filter(a=>p.audits.includes(a.id)).map(a=>`<div class="flex items-center gap-2 text-xs border rounded-sm p-2 mb-1" style="border-color:#E5E7EB;background:#FFFFFF"><div class="w-2 h-2 rounded-full flex-shrink-0" style="background:${a.color}"></div><div><p class="font-medium">${a.name}</p><p style="color:#4B5563">${a.agency} — ${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</p></div></div>`).join('')}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('timeline-inner').innerHTML=html;
+}
+
+// Impact Matrix
+document.getElementById('matrix-container').innerHTML=`<table class="w-full text-xs"><thead><tr style="background:#F9FAFB">
+  <th class="text-left p-3 font-semibold border-b border-r" style="border-color:#E5E7EB;color:#4B5563">Project</th>
+  ${AUDITS.map(a=>`<th class="p-3 font-semibold border-b border-r text-center" style="border-color:#E5E7EB;color:${a.color}">${a.name.replace("2025 ","").replace(" Review","").replace(" Examination","")}</th>`).join('')}
+</tr></thead><tbody>
+  ${PROJECTS.map(p=>{const sc=statusCfg[p.status];return `<tr class="hover:bg-gray-50"><td class="p-3 border-b border-r font-medium" style="border-color:#F3F4F6"><div class="flex items-center gap-2">${badge(sc.label,sc.bg,sc.text)}<span class="truncate max-w-[200px]">${p.name}</span></div></td>${AUDITS.map(a=>`<td class="p-3 border-b border-r text-center" style="border-color:#F3F4F6">${p.audits.includes(a.id)?`<span class="inline-flex items-center justify-center w-6 h-6 rounded-full text-white" style="background:${a.color}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>`:'<span style="color:#E5E7EB">-</span>'}</td>`).join('')}</tr>`;}).join('')}
+</tbody></table>`;
+
+renderTimeline();
+
+// Close menus on outside click
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.sm\\:hidden')){var m=document.getElementById('mobile-nav-tl');if(m)m.classList.add('hidden');}
+  if(!e.target.closest('#guide-wrapper')){document.getElementById('guide-box').classList.remove('show');}
+});
+</script>
+</body>
+</html>
