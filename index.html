@@ -28,12 +28,16 @@
   .kpi-card { padding:0.75rem; border-radius:0.5rem; border:1px solid #E5E7EB; background:#FFFFFF; }
   @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
   .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-  .links-dropdown { position:relative; }
-  .links-dropdown-menu { display:none; position:absolute; right:0; top:100%; margin-top:0.5rem; width:18rem; background:#fff; border:1px solid #E5E7EB; border-radius:0.5rem; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); overflow:hidden; z-index:100; }
-  .links-dropdown-menu.show { display:block; }
-  .links-dropdown-menu a { display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; font-size:0.875rem; color:#374151; border-radius:0.375rem; transition:background-color 0.15s; text-decoration:none; }
-  .links-dropdown-menu a:hover { background:#F9FAFB; }
-  .links-dropdown-menu a.placeholder { color:#9CA3AF; }
+  .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.25); z-index:60; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+  .sidebar-overlay.show { opacity:1; pointer-events:auto; }
+  .sidebar-panel { position:fixed; top:0; left:0; bottom:0; width:18rem; background:#fff; border-right:1px solid #E5E7EB; box-shadow:4px 0 25px rgba(0,0,0,0.08); z-index:70; transform:translateX(-100%); transition:transform 0.3s ease; }
+  .sidebar-panel.open { transform:translateX(0); }
+  .sidebar-tab { position:fixed; left:0; top:50%; z-index:55; transform:translateY(-50%); background:#005EB8; color:#fff; border-radius:0 0.5rem 0.5rem 0; padding:0.75rem 0.4rem; cursor:pointer; box-shadow:2px 2px 8px rgba(0,0,0,0.12); transition:padding 0.2s; border:none; }
+  .sidebar-tab:hover { padding-left:0.6rem; }
+  .sidebar-tab span { writing-mode:vertical-rl; transform:rotate(180deg); font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; }
+  .sidebar-link { display:flex; align-items:center; gap:0.5rem; padding:0.625rem 0.75rem; font-size:0.875rem; color:#374151; border-radius:0.375rem; transition:background-color 0.15s; text-decoration:none; }
+  .sidebar-link:hover { background:#F4F7F9; }
+  .sidebar-link.placeholder { color:#9CA3AF; }
 </style>
 </head>
 <body>
@@ -48,25 +52,6 @@
       <a href="#skills" class="nav-link text-sm font-medium" style="color:#4B5563">Skills</a>
       <a href="#education" class="nav-link text-sm font-medium" style="color:#4B5563">Education</a>
       <a href="#contact" class="nav-link text-sm font-medium" style="color:#4B5563">Contact</a>
-      <!-- Important Links Dropdown -->
-      <div class="links-dropdown" id="links-dropdown">
-        <button onclick="event.stopPropagation();document.getElementById('links-menu').classList.toggle('show')" class="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-md hover:bg-gray-100" style="color:#005EB8">
-          <i data-lucide="link-2" style="width:14px;height:14px"></i>
-          Important Links
-          <i data-lucide="chevron-down" style="width:12px;height:12px" id="links-chevron"></i>
-        </button>
-        <div class="links-dropdown-menu" id="links-menu">
-          <div style="padding:0.5rem">
-            <a href="https://www.datacamp.com/certificate/SQA0010173299002" target="_blank"><i data-lucide="external-link" style="width:13px;height:13px;color:#005EB8"></i> SQL Certificate — DataCamp</a>
-            <a href="https://www.credly.com/badges/6f2e79ef-287f-49ce-a420-8999c852aa2f/public_url" target="_blank"><i data-lucide="external-link" style="width:13px;height:13px;color:#005EB8"></i> Python PCEP Certificate — Credly</a>
-            <a href="risk-assessor.html"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#005EB8"></i> AI Risk Assessment Tool</a>
-            <a href="audit-dashboard.html"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#005EB8"></i> Audit Readiness Command Center</a>
-            <a href="timeline.html"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#005EB8"></i> Project Timeline & Audit Impact</a>
-            <a href="#" class="placeholder" onclick="event.preventDefault()"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#9CA3AF"></i> MLT Recognition Email <span style="font-size:0.75rem;font-style:italic;margin-left:auto;color:#9CA3AF">pending</span></a>
-            <a href="#" class="placeholder" onclick="event.preventDefault()"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#9CA3AF"></i> Perfect Branch Audit Document <span style="font-size:0.75rem;font-style:italic;margin-left:auto;color:#9CA3AF">pending</span></a>
-          </div>
-        </div>
-      </div>
     </div>
     <button class="md:hidden p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
       <i data-lucide="menu" style="width:22px;height:22px;color:#0A2F6B"></i>
@@ -80,25 +65,59 @@
       <a href="#education" class="text-sm font-medium py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Education</a>
       <a href="#contact" class="text-sm font-medium py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Contact</a>
       <div class="border-t pt-3" style="border-color:#E5E7EB">
-        <p class="text-xs font-bold uppercase tracking-wider mb-2" style="color:#005EB8">Important Links</p>
-        <a href="https://www.datacamp.com/certificate/SQA0010173299002" target="_blank" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">SQL Certificate — DataCamp</a>
-        <a href="https://www.credly.com/badges/6f2e79ef-287f-49ce-a420-8999c852aa2f/public_url" target="_blank" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Python PCEP Certificate — Credly</a>
-        <a href="risk-assessor.html" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">AI Risk Assessment Tool</a>
-        <a href="audit-dashboard.html" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Audit Readiness Command Center</a>
-        <a href="timeline.html" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Project Timeline & Audit Impact</a>
-        <a href="#" class="block text-sm py-1" style="color:#9CA3AF" onclick="event.preventDefault()">MLT Recognition Email (pending)</a>
-        <a href="#" class="block text-sm py-1" style="color:#9CA3AF" onclick="event.preventDefault()">Perfect Branch Audit Document (pending)</a>
+        <button class="w-full text-left text-sm font-bold py-2 uppercase tracking-wider" style="color:#005EB8" onclick="document.getElementById('mobile-menu').classList.add('hidden');openSidebar()">Open Important Links</button>
       </div>
     </div>
   </div>
 </nav>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar-panel" id="sidebar-panel">
+  <div class="p-5 h-full overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-2">
+        <i data-lucide="link-2" style="width:16px;height:16px;color:#005EB8"></i>
+        <h3 class="font-semibold text-sm uppercase tracking-wider" style="color:#005EB8;font-family:'Outfit'">Important Links</h3>
+      </div>
+      <button onclick="closeSidebar()" class="p-1.5 rounded-md hover:bg-gray-100">
+        <i data-lucide="x" style="width:18px;height:18px;color:#4B5563"></i>
+      </button>
+    </div>
+    <div class="space-y-1">
+      <p class="text-[10px] font-bold uppercase tracking-wider mb-2 px-3" style="color:#9CA3AF">Certifications</p>
+      <a href="https://www.datacamp.com/certificate/SQA0010173299002" target="_blank" class="sidebar-link"><i data-lucide="external-link" style="width:14px;height:14px;color:#005EB8;flex-shrink:0"></i> SQL Certificate — DataCamp</a>
+      <a href="https://www.credly.com/badges/6f2e79ef-287f-49ce-a420-8999c852aa2f/public_url" target="_blank" class="sidebar-link"><i data-lucide="external-link" style="width:14px;height:14px;color:#005EB8;flex-shrink:0"></i> Python PCEP Certificate — Credly</a>
+    </div>
+    <div class="my-4 border-t" style="border-color:#E5E7EB"></div>
+    <div class="space-y-1">
+      <p class="text-[10px] font-bold uppercase tracking-wider mb-2 px-3" style="color:#9CA3AF">Interactive Tools</p>
+      <a href="risk-assessor.html" class="sidebar-link"><i data-lucide="arrow-up-right" style="width:14px;height:14px;color:#005EB8;flex-shrink:0"></i> AI Risk Assessment Tool</a>
+      <a href="audit-dashboard.html" class="sidebar-link"><i data-lucide="arrow-up-right" style="width:14px;height:14px;color:#005EB8;flex-shrink:0"></i> Audit Readiness Command Center</a>
+      <a href="timeline.html" class="sidebar-link"><i data-lucide="arrow-up-right" style="width:14px;height:14px;color:#005EB8;flex-shrink:0"></i> Project Timeline & Audit Impact</a>
+    </div>
+    <div class="my-4 border-t" style="border-color:#E5E7EB"></div>
+    <div class="space-y-1">
+      <p class="text-[10px] font-bold uppercase tracking-wider mb-2 px-3" style="color:#9CA3AF">Supporting Documents</p>
+      <a href="#" class="sidebar-link placeholder" onclick="event.preventDefault()"><i data-lucide="arrow-up-right" style="width:14px;height:14px;color:#9CA3AF;flex-shrink:0"></i> MLT Recognition Email <span style="font-size:0.65rem;font-style:italic;margin-left:auto;color:#9CA3AF">pending</span></a>
+      <a href="#" class="sidebar-link placeholder" onclick="event.preventDefault()"><i data-lucide="arrow-up-right" style="width:14px;height:14px;color:#9CA3AF;flex-shrink:0"></i> Perfect Branch Audit Document <span style="font-size:0.65rem;font-style:italic;margin-left:auto;color:#9CA3AF">pending</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR TAB -->
+<button class="sidebar-tab" id="sidebar-tab" onclick="openSidebar()">
+  <span>Important Links</span>
+</button>
 
 <!-- HERO -->
 <section id="hero" class="relative flex items-center overflow-hidden" style="background:#F4F7F9">
   <div class="relative z-10 max-w-6xl mx-auto px-6 py-14 sm:py-20 w-full">
     <div class="grid md:grid-cols-3 gap-8 sm:gap-12 items-center">
       <div class="md:col-span-2 animate-fade-in-up">
-        <p class="overline mb-3">90-Day Strategic Plan</p>
+        <p class="overline mb-3">90 - Day Plan and Resume</p>
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight leading-tight mb-4" style="color:#0A2F6B">Steven Kay</h1>
         <p class="text-lg sm:text-xl font-medium mb-3" style="font-family:'Outfit';color:#005EB8">Executive Director — Audit Readiness</p>
         <p class="text-sm sm:text-base mb-5 max-w-xl leading-relaxed" style="color:#4B5563">Card Fair Lending &bull; Chase Bank</p>
@@ -160,6 +179,34 @@
     <p class="overline mb-3">Career</p>
     <h2 class="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight mb-16" style="color:#0A2F6B">Professional Experience</h2>
     <div class="space-y-12" id="experience-list"></div>
+    <!-- Chase Leadership Engagement -->
+    <div class="mt-12 p-6 rounded-xl border-2" style="border-color:#005EB8;background:linear-gradient(135deg, #F4F7F9 0%, #EFF6FF 100%)">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:#005EB8">
+          <i data-lucide="crown" style="width:20px;height:20px;color:#fff"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold" style="color:#0A2F6B;font-family:'Outfit'">Chase Leadership Engagement</h3>
+          <p class="text-xs" style="color:#005EB8">Internal Leadership & Mentorship Programs</p>
+        </div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="p-4 rounded-lg bg-white border" style="border-color:#E5E7EB">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="map-pin" style="width:16px;height:16px;color:#005EB8"></i>
+            <h4 class="text-sm font-semibold" style="color:#0A2F6B">Arizona MLT Program Manager</h4>
+          </div>
+          <p class="text-xs leading-relaxed" style="color:#4B5563">Market Leadership Team (MLT) — Leading the Arizona market's strategic leadership program, connecting site leaders to drive cross-functional initiatives and community impact.</p>
+        </div>
+        <div class="p-4 rounded-lg bg-white border" style="border-color:#E5E7EB">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="star" style="width:16px;height:16px;color:#005EB8"></i>
+            <h4 class="text-sm font-semibold" style="color:#0A2F6B">Rising Stars — Faculty Pillar Lead</h4>
+          </div>
+          <p class="text-xs leading-relaxed" style="color:#4B5563">Leading the faculty development pillar of Chase's Rising Stars program — designing curriculum, mentoring high-potential employees, and building the next generation of Chase leaders.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -187,14 +234,8 @@
 </section>
 
 <script>
-// Close dropdown when clicking outside
-document.addEventListener('click',function(e){
-  if(!e.target.closest('#links-dropdown')){
-    document.getElementById('links-menu').classList.remove('show');
-  }
-});
-
-// ===== PHASE DATA =====
+// Initialize Lucide icons
+lucide.createIcons();
 const PHASES=[
   {phase:"Phase 1",days:"Days 1-30",title:"Assess & Diagnose",icon:"radar",color:"#005EB8",
     objective:"Gain full situational awareness of Card Fair Lending audit readiness. Identify critical gaps, map stakeholders, and establish baseline metrics to inform a data-driven remediation strategy.",
@@ -326,6 +367,10 @@ document.getElementById('edu-achievements').innerHTML=`
     <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="shield-check" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">Achieved Perfect Branch Audit</h3><p class="text-sm" style="color:#4B5563">Led team to achieve a perfect score on branch audit — zero findings, zero exceptions.</p><a href="#" class="inline-flex items-center gap-1 mt-2 text-xs font-semibold hover:opacity-80" style="color:#005EB8" onclick="event.preventDefault()"><i data-lucide="file-check" style="width:12px;height:12px"></i> View Supporting Document <i data-lucide="external-link" style="width:10px;height:10px"></i></a></div></div></div>
   </div>
 </div>`;
+
+// Sidebar
+function openSidebar(){document.getElementById('sidebar-panel').classList.add('open');document.getElementById('sidebar-overlay').classList.add('show');document.getElementById('sidebar-tab').style.opacity='0';document.getElementById('sidebar-tab').style.pointerEvents='none';}
+function closeSidebar(){document.getElementById('sidebar-panel').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('show');document.getElementById('sidebar-tab').style.opacity='1';document.getElementById('sidebar-tab').style.pointerEvents='auto';}
 
 // Sticky nav scroll effect
 window.addEventListener('scroll',()=>{const n=document.getElementById('main-nav');if(window.scrollY>20){n.style.background='rgba(255,255,255,0.8)';n.style.backdropFilter='blur(20px)';n.style.borderBottom='1px solid rgba(0,0,0,0.05)';n.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'}else{n.style.background='transparent';n.style.backdropFilter='none';n.style.borderBottom='none';n.style.boxShadow='none'}});
