@@ -218,66 +218,76 @@ document.getElementById('audit-cards').innerHTML=AUDITS.map(a=>{
 // Timeline
 function renderTimeline(){
   const filter=document.getElementById('status-filter').value;
-  const filtered=filter==="all"?PROJECTS:PROJECTS.filter(p=>p.status===filter);
+  const allFiltered=filter==="all"?PROJECTS:PROJECTS.filter(p=>p.status===filter);
   const months=[];
   const cur=new Date(TL_START.getFullYear(),TL_START.getMonth(),1);
   while(cur<=TL_END){months.push(new Date(cur));cur.setMonth(cur.getMonth()+1);}
   const now=new Date();
 
   let html=`<div class="flex border-b" style="border-color:#E5E7EB">
-    <div class="w-72 flex-shrink-0 p-3 border-r text-xs font-semibold uppercase tracking-wider" style="border-color:#E5E7EB;color:#4B5563;background:#F9FAFB">Project</div>
+    <div class="w-56 sm:w-72 flex-shrink-0 p-3 border-r text-xs font-semibold uppercase tracking-wider" style="border-color:#E5E7EB;color:#4B5563;background:#F9FAFB">Audit / Exam</div>
     <div class="flex-1 flex">${months.map(m=>{
       const isNow=m.getMonth()===now.getMonth()&&m.getFullYear()===now.getFullYear();
       return `<div class="flex-1 p-2 text-center text-xs font-medium border-r" style="border-color:#F3F4F6;color:${isNow?'#005EB8':'#4B5563'};background:${isNow?'#EFF6FF':'#F9FAFB'};font-weight:${isNow?700:500}">${m.toLocaleDateString("en-US",{month:"short"})} ${m.getFullYear().toString().slice(2)}</div>`;
     }).join('')}</div>
   </div>`;
 
-  // Project rows (no audit rows at top — audit info moved into project rows)
-  filtered.forEach((p,idx)=>{
-    const barL=getPos(p.start),barR=getPos(p.end),barW=Math.max(2,barR-barL);
-    const barColor=statusCfg[p.status].bar;
-    const pc=prioCfg[p.priority];
-    const sc=statusCfg[p.status];
-    const pAudits=AUDITS.filter(a=>p.audits.includes(a.id));
+  // One row per audit, with impacted project bars inside
+  AUDITS.forEach(a=>{
+    const impacted=allFiltered.filter(p=>p.audits.includes(a.id));
+    if(impacted.length===0) return;
+    const bandL=getPos(a.windowStart),bandR=getPos(a.date),bandW=Math.max(2,bandR-bandL);
+    const rowH=Math.max(80, impacted.length*28+24);
 
-    // Audit bands — stacked vertically, robust for any count
-    const bandCount=pAudits.length;
-    const gap=bandCount>1?2:0;
-    const totalGap=(bandCount-1)*gap;
-    const auditBands=pAudits.map((a,i)=>{
-      const bandL=getPos(a.windowStart),bandR=getPos(a.date),bandW=Math.max(2,bandR-bandL);
-      const h=`calc((100% - ${totalGap}px) / ${bandCount})`;
-      const t=i===0?'0px':`calc(${i} * ((100% - ${totalGap}px) / ${bandCount} + ${gap}px))`;
-      return `<div class="absolute rounded-sm" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};background:${a.color};opacity:0.15;pointer-events:none;z-index:1"></div><div class="absolute flex items-center gap-1 px-1.5 overflow-hidden" style="left:${bandL}%;width:${bandW}%;top:${t};height:${h};pointer-events:none;z-index:2">${auditIcon(a.color,9)}<span class="text-[9px] font-bold whitespace-nowrap" style="color:${a.color};opacity:0.85">| ${a.agency}: ${a.name.replace("2025 ","").split(" ").slice(0,4).join(" ")}</span></div>`;
+    // Project bars stacked vertically inside the row
+    const projBars=impacted.map((p,i)=>{
+      const pL=getPos(p.start),pR=getPos(p.end),pW=Math.max(2,pR-pL);
+      const sc=statusCfg[p.status];
+      const topPx=12+i*28;
+      return `<div class="absolute h-5 rounded-sm flex items-center px-2 cursor-pointer" title="${p.id}: ${p.name} (${sc.label})" style="left:${pL}%;width:${pW}%;top:${topPx}px;background:${sc.bar};opacity:0.85;z-index:5" onclick="event.stopPropagation();toggleAuditDetail('${a.id}')"><span class="text-[9px] font-medium text-white truncate">${p.id} ${p.name}</span></div>`;
     }).join('');
 
-    html+=`<div class="flex border-b cursor-pointer hover:bg-gray-50 transition-colors" style="border-color:#F3F4F6" onclick="this.nextElementSibling.classList.toggle('hidden')">
-      <div class="w-72 flex-shrink-0 p-3 border-r flex items-center gap-2" style="border-color:#E5E7EB">
+    html+=`<div class="flex border-b cursor-pointer hover:bg-gray-50 transition-colors" style="border-color:#F3F4F6" onclick="toggleAuditDetail('${a.id}')">
+      <div class="w-56 sm:w-72 flex-shrink-0 p-3 border-r flex items-start gap-2" style="border-color:#E5E7EB;border-left:3px solid ${a.color}">
         <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-2 mb-1"><span class="text-xs" style="font-family:'IBM Plex Mono';color:#9CA3AF">${p.id}</span>${badge(p.priority,pc.bg,pc.text)}</div>
-          <p class="text-sm font-medium truncate">${p.name}</p>
-          <div class="mt-1">${badge(sc.label,sc.bg,sc.text)}</div>
+          <div class="flex items-center gap-1.5 mb-1">${auditIcon(a.color,11)}<span class="text-[10px] font-bold uppercase tracking-wider" style="color:${a.color}">${a.agency}</span></div>
+          <p class="text-sm font-medium leading-snug">${a.name.replace("2025 ","")}</p>
+          <p class="text-[10px] mt-1" style="color:#9CA3AF">${a.type}</p>
+          <p class="text-xs mt-1.5 font-medium" style="color:#4B5563">${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</p>
+          <p class="text-[10px] mt-1" style="color:#9CA3AF">${impacted.length} project${impacted.length>1?'s':''} impacted</p>
         </div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" class="flex-shrink-0 mt-1"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <div class="flex-1 relative py-3 px-1" style="overflow:hidden">
-        ${auditBands}
-        <div class="absolute top-1/2 -translate-y-1/2 h-6 rounded-sm flex items-center px-2" style="left:${barL}%;width:${barW}%;background:${barColor};opacity:0.85;z-index:5"><span class="text-[10px] font-medium text-white truncate">${p.name}</span></div>
+      <div class="flex-1 relative" style="overflow:hidden;min-height:${rowH}px">
+        <div class="absolute rounded-sm" style="left:${bandL}%;width:${bandW}%;top:0;bottom:0;background:${a.color};opacity:0.08;z-index:1"></div>
+        ${projBars}
       </div>
     </div>
-    <div class="hidden bg-gray-50 border-b p-4 pl-6" style="border-color:#F3F4F6">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#4B5563">Details</p><p class="text-sm leading-relaxed mb-3" style="color:#4B5563">${p.desc}</p><p class="text-xs" style="color:#4B5563"><span class="font-medium" style="color:#111827">Owner:</span> ${p.owner}</p><p class="text-xs"><span class="font-medium" style="color:#111827">Dept:</span> ${p.dept}</p></div>
-        <div><p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#B91C1C">Impacts Audits</p>${pAudits.map(a=>`<div class="flex items-center gap-2 text-xs border rounded-sm p-2 mb-2" style="border-color:#E5E7EB;background:#FFFFFF">${auditIcon(a.color,12)}<div><p class="font-medium">${a.name}</p><p style="color:#4B5563">${a.agency} — ${new Date(a.date).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</p></div></div>`).join('')}</div>
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5" style="color:#005EB8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22"/><path d="M12 2a4 4 0 0 0-4 4c0 1.95 1.4 3.58 3.25 3.93"/></svg> AI Impact Analysis</p>
-          <button onclick="event.stopPropagation();var r=this.parentElement.querySelector('.ai-response');r.classList.toggle('show');this.textContent=r.classList.contains('show')?'Hide Analysis':'Analyze Audit Impact'" class="text-xs font-medium px-3 py-1.5 rounded-md text-white hover:opacity-90 transition-opacity" style="background:#005EB8">Analyze Audit Impact</button>
-          <div class="ai-response"><p class="text-xs leading-relaxed" style="color:#0369A1">${AI_RESPONSES[p.id]||'Analysis not available for this project.'}</p></div>
-        </div>
+    <div id="audit-detail-${a.id}" class="hidden bg-gray-50 border-b p-4 pl-6" style="border-color:#F3F4F6">
+      <p class="text-xs leading-relaxed mb-4" style="color:#4B5563">${a.scope}</p>
+      <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:#4B5563">Impacted Projects</p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        ${impacted.map(p=>{
+          const sc=statusCfg[p.status];const pc=prioCfg[p.priority];
+          return `<div class="border rounded-sm p-3" style="border-color:#E5E7EB;background:#FFFFFF">
+            <div class="flex items-center gap-2 mb-1.5"><span class="text-xs" style="font-family:'IBM Plex Mono';color:#9CA3AF">${p.id}</span>${badge(p.priority,pc.bg,pc.text)}${badge(sc.label,sc.bg,sc.text)}</div>
+            <p class="text-sm font-medium mb-1">${p.name}</p>
+            <p class="text-xs" style="color:#4B5563">${p.desc}</p>
+            <div class="flex items-center gap-3 mt-2 text-xs" style="color:#9CA3AF"><span>${p.owner}</span><span>${new Date(p.start).toLocaleDateString("en-US",{month:"short",day:"numeric"})} — ${new Date(p.end).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</span></div>
+            <div class="mt-2">
+              <button onclick="event.stopPropagation();var r=this.nextElementSibling;r.classList.toggle('show');this.textContent=r.classList.contains('show')?'Hide Analysis':'AI Impact Analysis'" class="text-[10px] font-medium px-2 py-1 rounded text-white hover:opacity-90" style="background:#005EB8">AI Impact Analysis</button>
+              <div class="ai-response"><p class="text-xs leading-relaxed" style="color:#0369A1">${AI_RESPONSES[p.id]||'Analysis not available.'}</p></div>
+            </div>
+          </div>`;
+        }).join('')}
       </div>
     </div>`;
   });
   document.getElementById('timeline-inner').innerHTML=html;
+}
+
+function toggleAuditDetail(id){
+  document.getElementById('audit-detail-'+id).classList.toggle('hidden');
 }
 
 // Impact Matrix
