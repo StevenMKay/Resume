@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Fair Lending Risk Assessor — Prototype</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'IBM Plex Sans', sans-serif; margin: 0; background: #F4F5F7; color: #111827; }
+  .section-toggle { cursor: pointer; }
+  .section-toggle:hover { background: #F9FAFB; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-white border-b" style="border-color:#E5E7EB">
+  <div class="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
+    <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+      <a href="index.html" class="flex items-center gap-1 text-sm font-medium hover:opacity-70 flex-shrink-0" style="color:#005EB8">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <span class="hidden sm:inline">90-Day Plan</span>
+      </a>
+      <div class="w-px h-6 bg-gray-200 hidden sm:block"></div>
+      <div class="flex items-center gap-2 min-w-0">
+        <svg class="flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <h1 class="text-sm sm:text-base font-semibold tracking-tight truncate" style="font-family:'Chivo'">AI Fair Lending Risk Assessor</h1>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-3">
+      <a href="timeline.html" class="text-xs font-medium px-3 py-1.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563">Timeline</a>
+      <a href="audit-dashboard.html" class="text-xs font-medium px-3 py-1.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563">Dashboard</a>
+      <span class="text-xs font-medium px-2 py-1 rounded-sm" style="background:#FEF3C7;color:#B45309">Prototype Demo</span>
+    </div>
+    <div class="sm:hidden flex items-center gap-2">
+      <span class="text-[10px] font-medium px-1.5 py-0.5 rounded-sm" style="background:#FEF3C7;color:#B45309">Demo</span>
+      <div class="relative">
+        <button onclick="document.getElementById('mobile-nav-ra').classList.toggle('hidden')" class="p-2 rounded-sm hover:bg-gray-100">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div id="mobile-nav-ra" class="hidden absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-50 py-2 min-w-[160px]" style="border-color:#E5E7EB">
+          <a href="index.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#005EB8">90-Day Plan</a>
+          <a href="timeline.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#4B5563">Timeline</a>
+          <a href="audit-dashboard.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#4B5563">Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT: Context Hub -->
+    <aside class="lg:col-span-3 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:#4B5563;font-family:'Chivo'">Context Hub</h2>
+        <button onclick="document.getElementById('add-form').classList.toggle('hidden')" class="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-sm hover:bg-gray-100" style="color:#005EB8">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add
+        </button>
+      </div>
+
+      <!-- Add form -->
+      <div id="add-form" class="hidden border rounded-sm p-4 space-y-3" style="border-color:#005EB8;background:#FFFFFF">
+        <select id="ctx-type" class="w-full border rounded-sm px-3 py-2 text-sm" style="border-color:#E5E7EB"><option value="audit">Past Audit</option><option value="project">Project</option><option value="lesson">Lesson Learned</option></select>
+        <input id="ctx-title" type="text" placeholder="Title" class="w-full border rounded-sm px-3 py-2 text-sm" style="border-color:#E5E7EB">
+        <textarea id="ctx-content" placeholder="Describe the audit finding, project details, or lesson learned..." class="w-full border rounded-sm px-3 py-2 text-sm min-h-[80px] resize-y" style="border-color:#E5E7EB"></textarea>
+        <button onclick="addContext()" class="w-full text-sm font-medium py-2 rounded-sm text-white" style="background:#005EB8">Save Context</button>
+      </div>
+
+      <div id="custom-contexts"></div>
+
+      <!-- Pre-loaded sections (collapsed) -->
+      <div class="space-y-3" id="context-sections"></div>
+    </aside>
+
+    <!-- CENTER: Input -->
+    <section class="lg:col-span-5 space-y-4">
+      <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:#4B5563;font-family:'Chivo'">Initiative Assessment</h2>
+      <div class="border rounded-sm p-6" style="border-color:#E5E7EB;background:#FFFFFF">
+        <label class="text-sm font-medium block mb-2">Describe the proposed project or initiative</label>
+        <textarea id="initiative-input" placeholder="e.g., We are proposing a new credit card product that uses alternative data sources for underwriting decisions..." class="w-full border rounded-sm p-4 text-sm min-h-[160px] resize-y focus:outline-none focus:ring-1" style="border-color:#E5E7EB"></textarea>
+        <div class="flex items-center justify-between mt-4">
+          <p id="char-count" class="text-xs" style="color:#4B5563">Enter a description above</p>
+          <button id="submit-btn" onclick="runAssessment()" class="flex items-center gap-2 px-6 py-2.5 rounded-sm font-medium text-sm text-white disabled:opacity-50" style="background:#005EB8">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Run Risk Assessment
+          </button>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:#4B5563">Example Scenarios</p>
+        <div class="space-y-2" id="example-prompts"></div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Output -->
+    <section class="lg:col-span-4 space-y-4">
+      <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:#4B5563;font-family:'Chivo'">Risk Assessment Output</h2>
+      <div id="output-area">
+        <div class="border rounded-sm p-12 text-center border-dashed" style="border-color:#E5E7EB;background:#FFFFFF">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E5E7EB" stroke-width="2" class="mx-auto mb-4"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <p class="text-sm font-medium mb-1">No assessment yet</p>
+          <p class="text-xs" style="color:#4B5563">Describe an initiative and click "Run Risk Assessment" to generate a fair lending risk analysis.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+// Context data
+const AUDITS=[{id:"a1",title:"2024 Annual Fair Lending Exam — Card Portfolio",type:"audit",content:"OCC fair lending examination of credit card underwriting and pricing. Examiners focused on disparate impact in APR assignment and credit limit determination. Finding: Moderate risk in discretionary override processes for credit limit increases."},{id:"a2",title:"2023 ECOA/Reg B Compliance Review",type:"audit",content:"Internal compliance review of adverse action notices for credit card applications. Found 12% of notices lacked specific principal reasons as required under Reg B. Corrective action: Updated notice generation templates."},{id:"a3",title:"2023 HMDA Data Integrity Audit",type:"audit",content:"Review of HMDA-reportable data for accuracy and completeness. Identified geocoding errors in 3.2% of records and missing ethnicity data in 1.8% of applications."}];
+const PROJECTS=[{id:"p1",title:"AI-Powered Credit Limit Optimization",type:"project",content:"Proposed ML model to dynamically adjust credit limits based on spending patterns, payment history, and external data. Concern: Several features correlate with protected class proxies."},{id:"p2",title:"Digital Marketing Segmentation for Balance Transfer",type:"project",content:"Marketing initiative targeting pre-qualified customers for 0% APR balance transfer offers. Risk: Certain zip codes with majority-minority populations were systematically excluded."},{id:"p3",title:"Automated Collections Prioritization System",type:"project",content:"System redesign to prioritize delinquent accounts for outreach using behavioral scoring. Current system over-indexes on balance size, potentially creating disparate impact."}];
+const LESSONS=[{id:"l1",title:"Lesson: Third-Party Vendor Model Risk",type:"lesson",content:"In 2022, a third-party scoring vendor updated their model without notice, introducing a feature highly correlated with age. Lesson: Require vendor model change notifications in contracts."},{id:"l2",title:"Lesson: Documentation Standards for Exams",type:"lesson",content:"During 2023 OCC exam, examiners requested documentation of fair lending testing methodology. Initial response was delayed 2 weeks. Lesson: Maintain centralized, exam-ready repository."},{id:"l3",title:"Lesson: Exception Tracking for Credit Decisions",type:"lesson",content:"Audit found 18% of credit limit exceptions lacked documented business justification. Lesson: All exceptions must have contemporaneous written justification."}];
+
+const EXAMPLES=[
+  {label:"Evaluate marketing campaign targeting for ECOA compliance",text:"We want to launch a new credit card rewards program that targets customers based on spending categories, income brackets, and geographic regions. The program offers tiered benefits where higher-income customers in urban areas receive premium reward rates."},
+  {label:"Assess AI model for credit limit decisions",text:"Our data science team has built a machine learning model that recommends credit limit adjustments based on transaction velocity, merchant category codes, social media activity indicators, and neighborhood-level economic data."},
+  {label:"Review new collections outreach strategy",text:"We're proposing a new collections strategy that uses preferred communication channels based on customer age demographics and adjusts contact frequency based on account balance tiers."}
+];
+
+// Render context sections
+function renderContextSections() {
+  const sections = [
+    {title:"Past Audits",items:AUDITS,color:"#4B5563"},
+    {title:"Past Projects",items:PROJECTS,color:"#4B5563"},
+    {title:"Lessons Learned",items:LESSONS,color:"#4B5563"}
+  ];
+  const container = document.getElementById('context-sections');
+  container.innerHTML = sections.map((s,si) => `
+    <div>
+      <button onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('rotate-180')" class="section-toggle flex items-center justify-between w-full py-1 rounded-sm px-1">
+        <div class="flex items-center gap-2">
+          <p class="text-xs font-semibold uppercase tracking-wider" style="color:${s.color}">${s.title}</p>
+          <span class="text-xs rounded-full px-1.5 py-0.5 font-medium" style="background:#F4F5F7;color:#4B5563">${s.items.length}</span>
+        </div>
+        <svg class="chevron transition-transform" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="hidden space-y-2 mt-2">
+        ${s.items.map(item => contextItemHTML(item)).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function contextItemHTML(item) {
+  const typeLabel = {audit:"Past Audit",project:"Project",lesson:"Lesson Learned"};
+  return `<div class="border rounded-sm p-3 hover:shadow-sm transition-all" style="border-color:#E5E7EB;background:#FFFFFF">
+    <div class="flex items-start justify-between gap-2">
+      <div class="min-w-0">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#4B5563">${typeLabel[item.type]}</p>
+        <p class="text-sm font-medium truncate" style="color:#111827">${item.title}</p>
+      </div>
+      <button onclick="this.parentElement.nextElementSibling.classList.toggle('hidden')" class="p-1 hover:bg-gray-100 rounded-sm flex-shrink-0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+    <p class="hidden mt-2 text-sm leading-relaxed" style="color:#4B5563">${item.content}</p>
+  </div>`;
+}
+
+// Add custom context
+function addContext() {
+  const t=document.getElementById('ctx-type').value, ti=document.getElementById('ctx-title').value, c=document.getElementById('ctx-content').value;
+  if(!ti.trim()||!c.trim()) return;
+  const container=document.getElementById('custom-contexts');
+  const typeLabel={audit:"Past Audit",project:"Project",lesson:"Lesson Learned"};
+  container.innerHTML += `<div class="border rounded-sm p-3" style="border-color:#E5E7EB;background:#FFFFFF"><p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#005EB8">${typeLabel[t]}</p><p class="text-sm font-medium" style="color:#111827">${ti}</p><p class="text-sm mt-1 leading-relaxed" style="color:#4B5563">${c}</p></div>`;
+  document.getElementById('ctx-title').value='';document.getElementById('ctx-content').value='';
+  document.getElementById('add-form').classList.add('hidden');
+}
+
+// Example prompts
+document.getElementById('example-prompts').innerHTML = EXAMPLES.map((e,i) => `
+  <button onclick="document.getElementById('initiative-input').value='${e.text.replace(/'/g,"\\'")}';updateCharCount()" class="w-full text-left border rounded-sm p-3 text-sm hover:shadow-sm hover:-translate-y-px transition-all" style="border-color:#E5E7EB;background:#FFFFFF">
+    <div class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26z"/></svg><span class="font-medium">${e.label}</span></div>
+  </button>
+`).join('');
+
+function updateCharCount(){const v=document.getElementById('initiative-input').value;document.getElementById('char-count').textContent=v.length>0?v.length+' characters':'Enter a description above';}
+document.getElementById('initiative-input').addEventListener('input',updateCharCount);
+
+// Risk assessment
+function runAssessment(){
+  const input=document.getElementById('initiative-input').value;
+  if(!input.trim())return;
+  const output=document.getElementById('output-area');
+  output.innerHTML='<div class="border rounded-sm p-6 space-y-4" style="border-color:#E5E7EB;background:#FFFFFF"><div class="animate-pulse space-y-4"><div class="h-6 bg-gray-200 rounded-sm w-3/4"></div><div class="h-4 bg-gray-200 rounded-sm w-full"></div><div class="h-4 bg-gray-200 rounded-sm w-5/6"></div><div class="space-y-3 pt-4"><div class="h-20 bg-gray-100 rounded-sm"></div><div class="h-20 bg-gray-100 rounded-sm"></div><div class="h-20 bg-gray-100 rounded-sm"></div></div></div></div>';
+  setTimeout(()=>{
+    const lower=input.toLowerCase();
+    const hasAI=lower.includes("ai")||lower.includes("machine learning")||lower.includes("model")||lower.includes("algorithm");
+    const hasMarketing=lower.includes("marketing")||lower.includes("campaign")||lower.includes("target")||lower.includes("segmentation");
+    const hasCollections=lower.includes("collection")||lower.includes("delinquen")||lower.includes("outreach");
+    const hasData=lower.includes("data")||lower.includes("zip code")||lower.includes("geographic")||lower.includes("neighborhood")||lower.includes("social media");
+
+    const cats=[
+      {name:"ECOA / Reg B Compliance",severity:hasMarketing?"HIGH":hasAI?"MEDIUM":"LOW",findings:hasMarketing?["Geographic and income-based targeting may serve as proxies for race and national origin under ECOA.","Tiered benefit structures risk creating disparate impact if correlated with protected class characteristics.","Recommendation: Conduct pre-launch fair lending impact analysis on offer distribution."]
+        :hasAI?["Automated credit decisions must comply with adverse action notice requirements under Reg B.","Model inputs should be screened for proxy discrimination potential.","Recommendation: Ensure model documentation includes fair lending testing results."]
+        :["Standard ECOA compliance requirements apply.","Ensure all adverse action notices include specific, accurate principal reasons.","Recommendation: Review notice templates for regulatory alignment."]},
+      {name:"Disparate Impact Risk",severity:hasAI||hasMarketing?"HIGH":hasCollections?"MEDIUM":"MEDIUM",findings:hasAI?["ML models are inherently susceptible to learning patterns that correlate with protected classes.",hasData?"Use of neighborhood-level data significantly elevates proxy discrimination risk.":"Feature selection must exclude variables highly correlated with protected classes.","Recommendation: Perform disparate impact testing using matched-pair analysis before deployment."]
+        :hasMarketing?["Customer segmentation criteria may produce disparate impact in offer distribution.","Income and geographic filters historically correlate with racial demographics.","Recommendation: Overlay fair lending analysis on segmentation output."]
+        :["Contact frequency and channel selection should be tested for disparate impact.","Operational changes should be monitored for unintended demographic patterns.","Recommendation: Conduct pre/post implementation analysis."]},
+      {name:"Model Governance",severity:hasAI?"HIGH":"LOW",findings:hasAI?["Model requires full SR 11-7 compliant documentation.","Model Risk Management committee review required before production.","Recommendation: Submit to model governance for independent validation."]
+        :["No complex model governance concerns identified.","Document decision criteria and maintain audit trail."]},
+      {name:"Data Privacy & Permissibility",severity:hasData?"HIGH":"LOW",findings:hasData?["Use of social media and neighborhood-level data raises FCRA permissible purpose concerns.","Geographic data granularity must be evaluated against redlining risk.","Recommendation: Legal review of all data sources for FCRA, GLBA compliance."]
+        :["Standard data privacy protocols apply.","Recommendation: Confirm data retention policies align with requirements."]},
+      {name:"Audit Trail & Documentation",severity:"MEDIUM",findings:["All decision criteria and methodology changes must be documented contemporaneously.",hasAI?"Model decisions require explainability documentation.":"Business justification for initiative design choices should be captured.","Recommendation: Establish documentation protocol before launch."]}
+    ];
+
+    const highCount=cats.filter(c=>c.severity==="HIGH").length;
+    const overall=highCount>=2?"HIGH":highCount>=1?"MEDIUM-HIGH":"MEDIUM";
+    const summary=hasAI?"This initiative involves automated decisioning with elevated fair lending risk. ML models require rigorous testing, model governance review, and ongoing monitoring."
+      :hasMarketing?"Marketing segmentation presents fair lending risk through potential disparate impact. Geographic and income-based criteria historically correlate with protected class demographics."
+      :hasCollections?"Collections strategy modifications require careful analysis to ensure contact practices do not create disparate impact."
+      :"This initiative presents moderate fair lending risk requiring standard compliance review.";
+
+    const badgeHTML=(sev)=>{const c={HIGH:{bg:"#FEE2E2",text:"#B91C1C",border:"#FCA5A5"},"MEDIUM-HIGH":{bg:"#FEF3C7",text:"#B45309",border:"#FCD34D"},MEDIUM:{bg:"#FEF3C7",text:"#B45309",border:"#FCD34D"},LOW:{bg:"#D1FAE5",text:"#047857",border:"#6EE7B7"}}[sev]||{bg:"#FEF3C7",text:"#B45309",border:"#FCD34D"};return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border" style="background:${c.bg};color:${c.text};border-color:${c.border}">${sev}</span>`};
+
+    output.innerHTML=`<div class="space-y-4">
+      <div class="border rounded-sm p-5" style="border-color:#E5E7EB;background:#FFFFFF">
+        <div class="flex items-center justify-between mb-3"><h3 class="text-base font-semibold" style="font-family:'Chivo'">Overall Risk Level</h3>${badgeHTML(overall)}</div>
+        <p class="text-sm leading-relaxed" style="color:#4B5563">${summary}</p>
+      </div>
+      ${cats.map(cat=>`<div class="border rounded-sm p-5 hover:shadow-sm transition-all" style="border-color:#E5E7EB;background:#FFFFFF">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-sm font-semibold">${cat.name}</h4>${badgeHTML(cat.severity)}
+        </div>
+        <ul class="space-y-2">${cat.findings.map(f=>`<li class="flex gap-2 text-sm" style="color:#4B5563"><span class="text-gray-300 mt-0.5">-</span><span class="leading-relaxed">${f}</span></li>`).join('')}</ul>
+      </div>`).join('')}
+    </div>`;
+  },1800);
+}
+
+renderContextSections();
+document.addEventListener('click',function(e){if(!e.target.closest('.sm\\:hidden')){var m=document.getElementById('mobile-nav-ra');if(m)m.classList.add('hidden');}});
+</script>
+</body>
+</html>
