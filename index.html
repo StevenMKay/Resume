@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steven Kay | 90-Day Plan — Executive Director, Card Fair Lending</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  body { font-family: 'Manrope', sans-serif; margin: 0; background: #fff; color: #0A0A0A; }
+  h1,h2,h3,h4,h5,h6 { font-family: 'Outfit', sans-serif; }
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 80px; }
+  .nav-link { position: relative; transition: color 0.2s; }
+  .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:#005EB8; transition:width 0.3s; }
+  .nav-link:hover::after, .nav-link.active::after { width:100%; }
+  .timeline-item { position:relative; padding-left:2rem; }
+  .timeline-item::before { content:''; position:absolute; left:0; top:8px; width:12px; height:12px; border-radius:50%; background:#005EB8; border:3px solid #F4F7F9; box-shadow:0 0 0 2px #005EB8; }
+  .timeline-item::after { content:''; position:absolute; left:5px; top:24px; width:2px; height:calc(100% - 16px); background:#E5E7EB; }
+  .timeline-item:last-child::after { display:none; }
+  .skill-tag { transition: background-color 0.2s, transform 0.2s; }
+  .skill-tag:hover { background-color: #005EB8 !important; color: white !important; transform: scale(1.05); }
+  .skill-tag:hover [data-lucide] { stroke: white; }
+  .overline { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; font-weight:700; color:#005EB8; }
+  .icon-box { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .tool-card { padding:1rem; border-radius:0.5rem; border:1px solid #E5E7EB; background:#F9FAFB; }
+  .kpi-card { padding:0.75rem; border-radius:0.5rem; border:1px solid #E5E7EB; background:#FFFFFF; }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+  .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+  .links-dropdown { position:relative; }
+  .links-dropdown-menu { display:none; position:absolute; right:0; top:100%; margin-top:0.5rem; width:18rem; background:#fff; border:1px solid #E5E7EB; border-radius:0.5rem; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); overflow:hidden; z-index:100; }
+  .links-dropdown-menu.show { display:block; }
+  .links-dropdown-menu a { display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; font-size:0.875rem; color:#374151; border-radius:0.375rem; transition:background-color 0.15s; text-decoration:none; }
+  .links-dropdown-menu a:hover { background:#F9FAFB; }
+  .links-dropdown-menu a.placeholder { color:#9CA3AF; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+  <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+    <a href="#hero" class="font-semibold text-lg tracking-tight" style="font-family:'Outfit';color:#0A2F6B;">Steven Kay</a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#plan" class="nav-link text-sm font-medium" style="color:#4B5563">Plan</a>
+      <a href="#experience" class="nav-link text-sm font-medium" style="color:#4B5563">Experience</a>
+      <a href="#skills" class="nav-link text-sm font-medium" style="color:#4B5563">Skills</a>
+      <a href="#education" class="nav-link text-sm font-medium" style="color:#4B5563">Education</a>
+      <a href="#contact" class="nav-link text-sm font-medium" style="color:#4B5563">Contact</a>
+      <!-- Important Links Dropdown -->
+      <div class="links-dropdown" id="links-dropdown">
+        <button onclick="event.stopPropagation();document.getElementById('links-menu').classList.toggle('show')" class="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-md hover:bg-gray-100" style="color:#005EB8">
+          <i data-lucide="link-2" style="width:14px;height:14px"></i>
+          Important Links
+          <i data-lucide="chevron-down" style="width:12px;height:12px" id="links-chevron"></i>
+        </button>
+        <div class="links-dropdown-menu" id="links-menu">
+          <div style="padding:0.5rem">
+            <a href="https://www.datacamp.com/certificate/SQA0010173299002" target="_blank"><i data-lucide="external-link" style="width:13px;height:13px;color:#005EB8"></i> SQL Certificate — DataCamp</a>
+            <a href="https://www.credly.com/badges/6f2e79ef-287f-49ce-a420-8999c852aa2f/public_url" target="_blank"><i data-lucide="external-link" style="width:13px;height:13px;color:#005EB8"></i> Python PCEP Certificate — Credly</a>
+            <a href="risk-assessor.html"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#005EB8"></i> AI Risk Assessment Tool</a>
+            <a href="audit-dashboard.html"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#005EB8"></i> Audit Readiness Command Center</a>
+            <a href="timeline.html"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#005EB8"></i> Project Timeline & Audit Impact</a>
+            <a href="#" class="placeholder" onclick="event.preventDefault()"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#9CA3AF"></i> MLT Recognition Email <span style="font-size:0.75rem;font-style:italic;margin-left:auto;color:#9CA3AF">pending</span></a>
+            <a href="#" class="placeholder" onclick="event.preventDefault()"><i data-lucide="arrow-up-right" style="width:13px;height:13px;color:#9CA3AF"></i> Perfect Branch Audit Document <span style="font-size:0.75rem;font-style:italic;margin-left:auto;color:#9CA3AF">pending</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="md:hidden p-2" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+      <i data-lucide="menu" style="width:22px;height:22px;color:#0A2F6B"></i>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden border-t bg-white/95 backdrop-blur-xl" style="border-color:#E5E7EB">
+    <div class="flex flex-col px-6 py-4 gap-4">
+      <a href="#plan" class="text-sm font-medium py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Plan</a>
+      <a href="#experience" class="text-sm font-medium py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Experience</a>
+      <a href="#skills" class="text-sm font-medium py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Skills</a>
+      <a href="#education" class="text-sm font-medium py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Education</a>
+      <a href="#contact" class="text-sm font-medium py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Contact</a>
+      <div class="border-t pt-3" style="border-color:#E5E7EB">
+        <p class="text-xs font-bold uppercase tracking-wider mb-2" style="color:#005EB8">Important Links</p>
+        <a href="https://www.datacamp.com/certificate/SQA0010173299002" target="_blank" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">SQL Certificate — DataCamp</a>
+        <a href="https://www.credly.com/badges/6f2e79ef-287f-49ce-a420-8999c852aa2f/public_url" target="_blank" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Python PCEP Certificate — Credly</a>
+        <a href="risk-assessor.html" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">AI Risk Assessment Tool</a>
+        <a href="audit-dashboard.html" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Audit Readiness Command Center</a>
+        <a href="timeline.html" class="block text-sm py-1" style="color:#4B5563" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Project Timeline & Audit Impact</a>
+        <a href="#" class="block text-sm py-1" style="color:#9CA3AF" onclick="event.preventDefault()">MLT Recognition Email (pending)</a>
+        <a href="#" class="block text-sm py-1" style="color:#9CA3AF" onclick="event.preventDefault()">Perfect Branch Audit Document (pending)</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="relative flex items-center overflow-hidden" style="background:#F4F7F9">
+  <div class="relative z-10 max-w-6xl mx-auto px-6 py-14 sm:py-20 w-full">
+    <div class="grid md:grid-cols-3 gap-8 sm:gap-12 items-center">
+      <div class="md:col-span-2 animate-fade-in-up">
+        <p class="overline mb-3">90-Day Strategic Plan</p>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight leading-tight mb-4" style="color:#0A2F6B">Steven Kay</h1>
+        <p class="text-lg sm:text-xl font-medium mb-3" style="font-family:'Outfit';color:#005EB8">Executive Director — Audit Readiness</p>
+        <p class="text-sm sm:text-base mb-5 max-w-xl leading-relaxed" style="color:#4B5563">Card Fair Lending &bull; Chase Bank</p>
+        <p class="text-sm max-w-2xl leading-relaxed" style="color:#4B5563">Dynamic professional with 10+ years at Chase Bank. Proven track record leading cross-functional teams to drive innovation, operational excellence, and strategic compliance in Card Lending.</p>
+        <!-- Contact info in hero -->
+        <div class="flex flex-wrap items-center gap-6 mt-6">
+          <a href="tel:954-647-3513" class="flex items-center gap-2 text-sm font-medium hover:opacity-80" style="color:#0A2F6B">
+            <i data-lucide="phone" style="width:15px;height:15px;color:#005EB8"></i>954-647-3513
+          </a>
+          <a href="mailto:steven.m.kay@live.com" class="flex items-center gap-2 text-sm font-medium hover:opacity-80" style="color:#0A2F6B">
+            <i data-lucide="mail" style="width:15px;height:15px;color:#005EB8"></i>steven.m.kay@live.com
+          </a>
+          <a href="https://linkedin.com" target="_blank" class="flex items-center gap-2 text-sm font-medium hover:opacity-80" style="color:#0A2F6B">
+            <i data-lucide="linkedin" style="width:15px;height:15px;color:#005EB8"></i>LinkedIn
+          </a>
+        </div>
+      </div>
+      <div class="flex justify-center md:justify-end animate-fade-in-up" style="animation-delay:200ms">
+        <div class="w-40 h-40 sm:w-48 sm:h-48 rounded-full border-4 flex items-center justify-center" style="border-color:#005EB8;background:linear-gradient(135deg,#E5E7EB,#F4F7F9)">
+          <i data-lucide="user-circle" style="width:80px;height:80px;color:#005EB8;opacity:0.3;stroke-width:0.8"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 90-DAY PLAN -->
+<section id="plan" class="py-24 sm:py-32" style="background:#FFFFFF">
+  <div class="max-w-5xl mx-auto px-6">
+    <p class="overline mb-3">Strategic Roadmap</p>
+    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight mb-4" style="color:#0A2F6B">90-Day Plan</h2>
+    <p class="text-base leading-relaxed mb-4 max-w-3xl" style="color:#4B5563">Card Fair Lending Audit Readiness — Executive Director</p>
+
+    <!-- Executive Summary -->
+    <div class="p-6 rounded-lg border mb-12" style="border-color:#E5E7EB;background:#F4F7F9">
+      <h4 class="text-xs font-bold tracking-widest uppercase mb-3 flex items-center gap-2" style="color:#0A2F6B"><i data-lucide="sparkles" style="width:14px;height:14px;color:#005EB8"></i> Executive Summary</h4>
+      <p class="text-sm leading-relaxed" style="color:#374151">This 90-day plan establishes a modern, AI-enabled audit readiness framework for Card Fair Lending at Chase. By combining rigorous gap assessment with automated testing, shift-left compliance integration, and centralized command-and-control dashboards, this strategy transforms the function from reactive exam preparation to proactive risk management. The plan delivers measurable outcomes — achieving 90%+ audit readiness within 90 days, reducing evidence retrieval time by 75%, and building a team equipped to pass regulatory examinations with confidence while positioning compliance as a strategic business enabler.</p>
+    </div>
+
+    <div class="space-y-8" id="phases-container"></div>
+
+    <!-- What Success Looks Like -->
+    <div class="mt-12 p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF">
+      <h4 class="text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2" style="color:#0A2F6B"><i data-lucide="shield-check" style="width:14px;height:14px;color:#005EB8"></i> What Success Looks Like by Day 90</h4>
+      <div class="grid sm:grid-cols-2 gap-3" id="success-items"></div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="mt-8 p-6 rounded-lg border" style="border-color:#E5E7EB;background:#F4F7F9">
+      <h4 class="text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2" style="color:#0A2F6B"><i data-lucide="gauge" style="width:14px;height:14px;color:#005EB8"></i> Suggested KPIs</h4>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kpis-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="py-24 sm:py-32" style="background:#F4F7F9">
+  <div class="max-w-6xl mx-auto px-6">
+    <p class="overline mb-3">Career</p>
+    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight mb-16" style="color:#0A2F6B">Professional Experience</h2>
+    <div class="space-y-12" id="experience-list"></div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="py-24 sm:py-32" style="background:#FFFFFF">
+  <div class="max-w-6xl mx-auto px-6">
+    <p class="overline mb-3">Capabilities</p>
+    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight mb-16" style="color:#0A2F6B">Core Competencies</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="skills-grid"></div>
+  </div>
+</section>
+
+<!-- EDUCATION & ACHIEVEMENTS -->
+<section id="education" class="py-24 sm:py-32" style="background:#F4F7F9">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-16" id="edu-achievements"></div>
+  </div>
+</section>
+
+<!-- FOOTER (simplified to match React) -->
+<section id="contact" class="py-12" style="background:#0A2F6B">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <p class="text-sm" style="color:rgba(255,255,255,0.5)">Steven Kay &bull; Executive Director Candidate &bull; Card Fair Lending Audit Readiness &bull; Chase Bank</p>
+  </div>
+</section>
+
+<script>
+// Close dropdown when clicking outside
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#links-dropdown')){
+    document.getElementById('links-menu').classList.remove('show');
+  }
+});
+
+// ===== PHASE DATA =====
+const PHASES=[
+  {phase:"Phase 1",days:"Days 1-30",title:"Assess & Diagnose",icon:"radar",color:"#005EB8",
+    objective:"Gain full situational awareness of Card Fair Lending audit readiness. Identify critical gaps, map stakeholders, and establish baseline metrics to inform a data-driven remediation strategy.",
+    actions:[
+      {icon:"folder-search",text:"Review existing Fair Lending Risk Assessment, Annual Monitoring Plan, and prior OCC/internal audit findings for the Card portfolio"},
+      {icon:"users",text:"Conduct 1:1 stakeholder meetings across Card Risk Governance, CCOR, Data Science, Product, and Marketing to map ownership and pain points"},
+      {icon:"scan-line",text:"Perform gap analysis on current audit documentation — regulatory evidence, statistical testing results, model validation reports, and exception logs"},
+      {icon:"gauge",text:"Assess team capabilities, training gaps, and organizational readiness for regulatory examination"},
+      {icon:"git-branch",text:"Map all active Card Lending initiatives to their fair lending risk implications and regulatory touchpoints (ECOA, Reg B, CFPB)"}
+    ],
+    tools:[
+      {icon:"brain-circuit",name:"AI Risk Assessment Tool",desc:"Deploy to evaluate new initiatives for fair lending risk and output required controls and audit evidence",link:"risk-assessor.html"},
+      {icon:"activity",name:"Audit Readiness Command Center",desc:"Stand up centralized dashboard tracking readiness score, documentation gaps, and key deadlines",link:"audit-dashboard.html"}
+    ],
+    milestones:["Deliver comprehensive audit readiness baseline assessment with gap severity scoring (Critical / High / Medium / Low)","Complete stakeholder map with RACI matrix for all Card Fair Lending functions","Publish initial risk heat map across underwriting, pricing, servicing, marketing, and collections","Identify top 5 critical gaps requiring immediate remediation with estimated timeline and resource requirements","Present findings briefing to senior leadership within 30 days — establishing credibility and strategic direction"],
+    execValue:"Eliminates blind spots. Provides leadership with a clear, data-driven picture of where the organization stands — enabling informed resource allocation and prioritized remediation before regulatory engagement."
+  },
+  {phase:"Phase 2",days:"Days 31-60",title:"Stabilize & Build",icon:"layers",color:"#0A2F6B",
+    objective:"Close critical compliance gaps, build foundational analytics and monitoring capabilities, and implement shift-left compliance processes that embed fair lending controls early in the product lifecycle.",
+    actions:[
+      {icon:"bar-chart-3",text:"Launch automated disparate impact testing across card approval rates, APR assignment, credit limit determination, and collections contact patterns"},
+      {icon:"shield-check",text:"Implement shift-left compliance framework — embedding fair lending review checkpoints into product development, marketing campaign design, and model deployment pipelines"},
+      {icon:"message-square-warning",text:"Build and execute mock audit scenarios simulating OCC examiner questions with standardized response protocols"},
+      {icon:"clipboard-check",text:"Remediate top critical gaps identified in Phase 1 — update adverse action notices, exception documentation, and model governance records"},
+      {icon:"workflow",text:"Establish project-to-audit dependency tracking to visualize initiative timelines against upcoming regulatory exam dates"}
+    ],
+    tools:[
+      {icon:"flask-conical",name:"Disparate Impact Testing Engine",desc:"Automated statistical testing for ECOA/Reg B compliance across all Card decisioning touchpoints"},
+      {icon:"pie-chart",name:"Fair Lending Analytics Dashboard",desc:"Track approval rates, pricing disparities, credit limits, and marketing segmentation risks in real time"},
+      {icon:"crosshair",name:"Mock Audit Simulator",desc:"Simulate regulator questions and prepare standardized responses with evidence linking"},
+      {icon:"timer",name:"Project & Audit Dependency Tracker",desc:"Gantt-style timeline mapping initiatives to audit deadlines with risk weighting",link:"timeline.html"}
+    ],
+    milestones:["Resolve 100% of critical-severity gaps and 75%+ of high-severity gaps identified in Phase 1 assessment","Achieve 85%+ audit readiness score on the Command Center dashboard (up from baseline)","Complete first full-cycle disparate impact testing across all Card decisioning processes with documented results","Conduct 2+ mock audit exercises with measured improvement in team response quality and evidence retrieval time","Deliver stabilized Annual Monitoring Plan draft with updated risk framework and testing calendar","Reduce average evidence retrieval time from 2 weeks to under 48 hours through centralized documentation"],
+    execValue:"Shifts compliance from reactive to proactive. Establishes quantifiable readiness metrics, reduces exam preparation cycle time by 60%+, and creates repeatable processes that scale across future audit cycles."
+  },
+  {phase:"Phase 3",days:"Days 61-90",title:"Optimize & Lead",icon:"sparkles",color:"#0092FF",
+    objective:"Operationalize all systems, achieve exam-ready status, develop the team into a best-in-class function, and present a forward-looking compliance strategy that positions fair lending as a competitive advantage.",
+    actions:[
+      {icon:"shield",text:"Finalize updated Fair Lending Risk Assessment and Monitoring Plan — integrate into firmwide compliance strategy with Card-specific controls"},
+      {icon:"file-check",text:"Execute full-scale simulated regulatory examination with cross-functional participation and scored performance evaluation"},
+      {icon:"users",text:"Launch team development program — mentorship, upskilling, and clear career pathing for fair lending professionals"},
+      {icon:"brain-circuit",text:"Implement AI-driven proactive risk detection for emerging card lending risks — model drift, marketing bias, collections patterns"},
+      {icon:"lightbulb",text:"Present 90-day results and forward-looking strategy to senior leadership with ROI metrics and recommended Year 1 investment priorities"}
+    ],
+    tools:[
+      {icon:"activity",name:"Audit Readiness Command Center (v2)",desc:"Fully operationalized with automated scoring, real-time alerts, and executive reporting",link:"audit-dashboard.html"},
+      {icon:"brain-circuit",name:"AI Risk Assessment Tool (v2)",desc:"Enhanced with regulatory mapping to ECOA/Reg B/CFPB and automated control recommendations",link:"risk-assessor.html"},
+      {icon:"cpu",name:"Proactive Risk Detection Engine",desc:"ML-powered monitoring for model drift, proxy discrimination, and emerging pattern detection"}
+    ],
+    milestones:["Achieve 90%+ audit readiness score with zero critical or high-severity gaps remaining","Successfully complete full-scale mock OCC examination with passing score and documented lessons learned","All team members trained and certified on fair lending testing protocols, exam procedures, and documentation standards","Present comprehensive 90-day results report to senior leadership with quantified risk reduction metrics","Deliver Year 1 strategic roadmap with budget, resource plan, and projected compliance maturity improvements","Establish ongoing cadence: monthly monitoring reviews, quarterly mock exams, and annual readiness certification"],
+    execValue:"Transforms the Card Fair Lending function from compliance-reactive to business-enabling. Positions the organization to pass regulatory exams with confidence, reduces risk exposure by 40%+, and creates a replicable model for other lending verticals."
+  }
+];
+
+// Render phases
+document.getElementById('phases-container').innerHTML=PHASES.map(p=>`
+  <div class="border rounded-lg overflow-hidden" style="border-color:#E5E7EB;background:#FFFFFF">
+    <div class="px-8 py-6" style="background:${p.color}08;border-bottom:2px solid ${p.color}">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:${p.color}15"><i data-lucide="${p.icon}" style="width:24px;height:24px;color:${p.color}"></i></div>
+        <div>
+          <div class="flex items-center gap-3"><span class="text-xs font-bold tracking-widest uppercase" style="color:${p.color}">${p.phase}</span><span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${p.color}15;color:${p.color}">${p.days}</span></div>
+          <h3 class="text-xl sm:text-2xl font-medium mt-1" style="color:#0A2F6B">${p.title}</h3>
+        </div>
+      </div>
+      <p class="text-sm leading-relaxed mt-4 max-w-4xl" style="color:#4B5563">${p.objective}</p>
+    </div>
+    <div class="p-8 space-y-8">
+      <div>
+        <h4 class="text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2" style="color:#0A2F6B"><i data-lucide="crosshair" style="width:14px;height:14px;color:${p.color}"></i> Key Actions</h4>
+        <div class="space-y-3">${p.actions.map(a=>`<div class="flex gap-3 items-start"><div class="icon-box mt-0.5" style="background:${p.color}10"><i data-lucide="${a.icon}" style="width:14px;height:14px;color:${p.color}"></i></div><p class="text-sm leading-relaxed" style="color:#374151">${a.text}</p></div>`).join('')}</div>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2" style="color:#0A2F6B"><i data-lucide="cpu" style="width:14px;height:14px;color:${p.color}"></i> Tools & Technology</h4>
+        <div class="grid sm:grid-cols-2 gap-3">${p.tools.map(t=>`<div class="tool-card"><div class="flex items-center gap-2 mb-2"><i data-lucide="${t.icon}" style="width:16px;height:16px;color:${p.color}"></i><span class="text-sm font-semibold" style="color:#0A2F6B">${t.name}</span></div><p class="text-xs leading-relaxed" style="color:#4B5563">${t.desc}</p>${t.link?`<a href="${t.link}" class="inline-flex items-center gap-1 mt-2 text-xs font-semibold hover:opacity-80" style="color:${p.color}">View Prototype <i data-lucide="arrow-up-right" style="width:10px;height:10px"></i></a>`:''}</div>`).join('')}</div>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold tracking-widest uppercase mb-4 flex items-center gap-2" style="color:#0A2F6B"><i data-lucide="target" style="width:14px;height:14px;color:${p.color}"></i> Key Milestones & Achievements</h4>
+        <div class="space-y-2.5">${p.milestones.map(m=>`<div class="flex gap-3 items-start"><i data-lucide="check-circle-2" style="width:16px;height:16px;color:${p.color};flex-shrink:0;margin-top:2px"></i><p class="text-sm leading-relaxed" style="color:#374151">${m}</p></div>`).join('')}</div>
+      </div>
+      <div class="p-5 rounded-lg" style="background:${p.color}08;border-left:3px solid ${p.color}">
+        <h4 class="text-xs font-bold tracking-widest uppercase mb-2 flex items-center gap-2" style="color:${p.color}"><i data-lucide="zap" style="width:14px;height:14px"></i> Executive Value</h4>
+        <p class="text-sm leading-relaxed" style="color:#374151">${p.execValue}</p>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+// Success items
+const successItems=["90%+ audit readiness score with zero critical gaps remaining","Automated disparate impact testing running across all Card decisioning touchpoints","Average evidence retrieval time reduced from 2 weeks to under 48 hours","Full-scale mock OCC examination completed with passing score","AI-powered risk assessment tool actively used by project teams","Shift-left compliance embedded in product development and marketing pipelines","All fair lending professionals trained, certified, and exam-ready","Senior leadership briefed with quantified risk reduction metrics and Year 1 roadmap"];
+document.getElementById('success-items').innerHTML=successItems.map(s=>`<div class="flex gap-2 items-start"><i data-lucide="check-circle-2" style="width:14px;height:14px;color:#047857;flex-shrink:0;margin-top:2px"></i><p class="text-sm leading-relaxed" style="color:#374151">${s}</p></div>`).join('');
+
+// KPIs
+const kpis=[{m:"Audit Readiness Score",t:"90%+",i:"gauge"},{m:"Critical Gap Count",t:"Zero",i:"shield-check"},{m:"Evidence Retrieval Time",t:"< 48 hours",i:"timer"},{m:"Mock Exam Pass Rate",t:"100%",i:"target"},{m:"Team Certification Rate",t:"100%",i:"users"},{m:"Disparate Impact Tests Automated",t:"100%",i:"flask-conical"},{m:"Shift-Left Coverage",t:"All new initiatives",i:"workflow"},{m:"Risk Exposure Reduction",t:"40%+",i:"trending-up"}];
+document.getElementById('kpis-grid').innerHTML=kpis.map(k=>`<div class="kpi-card"><i data-lucide="${k.i}" style="width:16px;height:16px;color:#005EB8;margin-bottom:8px"></i><p class="text-xs font-medium" style="color:#4B5563">${k.m}</p><p class="text-base font-bold" style="color:#0A2F6B;font-family:'Outfit'">${k.t}</p></div>`).join('');
+
+// Experience
+const EXP=[
+  {title:"Vice President, Business Analysis Manager",company:"Chase Bank — Tempe, AZ",dates:"2024 — Present",bullets:["Strategic planning and execution of firm initiatives, product releases, and annual KPIs in Card Lending with focuses on lending, technology innovation, ML/AI, and reporting.","Managed Lending strategic roadmap encompassing initiatives related to technology, risk, marketing, and audit.","Established customer outreach texting program, leading to increased $20MM in revenue over 5 years.","Led team of Executive Directors in meeting and exceeding line-of-business KPIs including revenue and service levels.","Developed business cases supporting financial justification of strategic and transformational initiatives for lending."]},
+  {title:"Vice President, Faculty III",company:"Chase Bank — Tempe, AZ",dates:"2020 — 2024",bullets:["Maintained SharePoint compliance while enhancing employee experience through innovative solutions.","Subject Matter Expert for SharePoint Compliance.","Crafted and managed project marketplace to assist leaders with project needs and employee upskilling.","Identified and executed process improvement initiatives, increasing employee engagement in training by over 40%."]},
+  {title:"Associate, Business Process Analyst",company:"Chase Bank — Tempe, AZ",dates:"2014 — 2020",bullets:["Project management of firm initiatives and owner of software releases and training content updates.","Managed process improvement team leading to misrouted call reduction of 30%.","Managed training for release of a new system to over 400 employees.","Crafted reports monitoring the creation and upkeep of over 100 procedures."]}
+];
+document.getElementById('experience-list').innerHTML=EXP.map(j=>`<div class="timeline-item"><div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3"><h3 class="text-lg sm:text-xl font-medium" style="color:#0A2F6B">${j.title}</h3><span class="text-sm font-medium" style="color:#005EB8">${j.dates}</span></div><p class="text-sm mb-4" style="color:#4B5563">${j.company}</p><ul class="space-y-2">${j.bullets.map(b=>`<li class="flex gap-2 text-sm leading-relaxed" style="color:#4B5563"><i data-lucide="chevron-right" style="width:14px;height:14px;color:#005EB8;flex-shrink:0;margin-top:4px"></i><span>${b}</span></li>`).join('')}</ul></div>`).join('');
+
+// Skills
+const SKILLS=["Agile Project Management","Strategic Execution","Data Analytics & Reporting","Credit Risk Management","Executive Presentations","Leadership & Influence","Artificial Intelligence","Machine Learning","Root Cause Analysis","Fraud Investigations","Risk Management","Training Development","Advanced Excel","SharePoint Design","Website Design","OKR Management"];
+const skillIcons=["workflow","crosshair","pie-chart","shield-check","sparkles","users","brain-circuit","activity","folder-search","scan-line","radar","book-open","database","layers","layout","target"];
+document.getElementById('skills-grid').innerHTML=SKILLS.map((s,i)=>`<div class="skill-tag flex items-center gap-3 p-4 rounded-lg border cursor-default" style="border-color:#E5E7EB;background:#FFFFFF"><i data-lucide="${skillIcons[i]}" style="width:18px;height:18px;color:#005EB8"></i><p class="text-sm font-medium" style="color:#0A0A0A">${s}</p></div>`).join('');
+
+// Education & Achievements
+document.getElementById('edu-achievements').innerHTML=`
+<div>
+  <p class="overline mb-3">Credentials</p>
+  <h2 class="text-2xl sm:text-3xl font-medium tracking-tight mb-8" style="color:#0A2F6B">Education & Certifications</h2>
+  <div class="space-y-6">
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="graduation-cap" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">Bachelor of Organizational Leadership</h3><p class="text-sm" style="color:#4B5563">Arizona State University</p><p class="text-xs mt-1" style="color:#005EB8">2020 — 2025</p></div></div></div>
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="award" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">SQL Associate Certificate</h3><p class="text-sm" style="color:#4B5563">DataCamp</p><p class="text-xs mt-1" style="color:#005EB8">2025</p><a href="https://www.datacamp.com/certificate/SQA0010173299002" target="_blank" class="inline-flex items-center gap-1 mt-2 text-xs font-semibold hover:opacity-80" style="color:#005EB8"><i data-lucide="external-link" style="width:10px;height:10px"></i> View Certificate</a></div></div></div>
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="award" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">PCEP — Certified Python Programmer</h3><p class="text-sm" style="color:#4B5563">Python Institute</p><p class="text-xs mt-1" style="color:#005EB8">2025</p><a href="https://www.credly.com/badges/6f2e79ef-287f-49ce-a420-8999c852aa2f/public_url" target="_blank" class="inline-flex items-center gap-1 mt-2 text-xs font-semibold hover:opacity-80" style="color:#005EB8"><i data-lucide="external-link" style="width:10px;height:10px"></i> View Certificate</a></div></div></div>
+  </div>
+</div>
+<div>
+  <p class="overline mb-3">Recognition</p>
+  <h2 class="text-2xl sm:text-3xl font-medium tracking-tight mb-8" style="color:#0A2F6B">Key Achievements</h2>
+  <div class="space-y-6">
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="award" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">Three-Time Champion of Chase Awardee</h3><p class="text-sm" style="color:#4B5563">Recognized in 2016, 2018, and 2025 for outstanding contributions.</p></div></div></div>
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="brain-circuit" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">AI Initiative Development</h3><p class="text-sm" style="color:#4B5563">Recognized for pioneering artificial intelligence initiatives within Card Lending.</p></div></div></div>
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="users" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">Chase Leadership Engagement</h3><p class="text-sm" style="color:#4B5563">Arizona MLT (Market Leadership Team) Program Manager and Rising Stars — Faculty Pillar Lead.</p><a href="#" class="inline-flex items-center gap-1 mt-2 text-xs font-semibold hover:opacity-80" style="color:#005EB8" onclick="event.preventDefault()"><i data-lucide="mail" style="width:12px;height:12px"></i> View Recognition Email <i data-lucide="external-link" style="width:10px;height:10px"></i></a></div></div></div>
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="trending-up" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">$20MM Revenue Impact</h3><p class="text-sm" style="color:#4B5563">Established customer outreach texting program generating $20MM in incremental revenue over 5 years.</p></div></div></div>
+    <div class="p-6 rounded-lg border" style="border-color:#E5E7EB;background:#FFFFFF"><div class="flex items-start gap-4"><i data-lucide="shield-check" style="width:24px;height:24px;color:#005EB8"></i><div><h3 class="font-medium text-base" style="color:#0A2F6B">Achieved Perfect Branch Audit</h3><p class="text-sm" style="color:#4B5563">Led team to achieve a perfect score on branch audit — zero findings, zero exceptions.</p><a href="#" class="inline-flex items-center gap-1 mt-2 text-xs font-semibold hover:opacity-80" style="color:#005EB8" onclick="event.preventDefault()"><i data-lucide="file-check" style="width:12px;height:12px"></i> View Supporting Document <i data-lucide="external-link" style="width:10px;height:10px"></i></a></div></div></div>
+  </div>
+</div>`;
+
+// Sticky nav scroll effect
+window.addEventListener('scroll',()=>{const n=document.getElementById('main-nav');if(window.scrollY>20){n.style.background='rgba(255,255,255,0.8)';n.style.backdropFilter='blur(20px)';n.style.borderBottom='1px solid rgba(0,0,0,0.05)';n.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'}else{n.style.background='transparent';n.style.backdropFilter='none';n.style.borderBottom='none';n.style.boxShadow='none'}});
+
+// Initialize Lucide icons
+lucide.createIcons();
+</script>
+</body>
+</html>
