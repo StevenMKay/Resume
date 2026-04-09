@@ -145,7 +145,7 @@
             <i data-lucide="mail" style="width:15px;height:15px;color:#005EB8"></i>steven.m.kay@live.com
           </a>
           <a href="https://linkedin.com" target="_blank" class="flex items-center gap-2 text-sm font-medium hover:opacity-80" style="color:#0A2F6B">
-            <i data-lucide="linkedin" style="width:15px;height:15px;color:#005EB8"></i>LinkedIn
+            <img src="https://raw.githubusercontent.com/StevenMKay/Resume/1b0f065fbb7552c24727a330f0ae74f016ae31bb/LinkedInIcon.png" alt="LinkedIn" style="width:15px;height:15px;">LinkedIn
           </a>
         </div>
       </div>
@@ -191,7 +191,11 @@
 <section id="experience" class="py-24 sm:py-32" style="background:#F4F7F9">
   <div class="max-w-6xl mx-auto px-6">
     <p class="overline mb-3">Career</p>
-    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight mb-16" style="color:#0A2F6B">Professional Experience</h2>
+    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight mb-4" style="color:#0A2F6B">Professional Experience</h2>
+    <div class="flex items-center gap-2 mb-16">
+      <i data-lucide="building-2" style="width:18px;height:18px;color:#005EB8"></i>
+      <p class="text-base font-medium" style="color:#4B5563;font-family:'Outfit'">Chase Bank — Tempe, AZ</p>
+    </div>
     <div class="space-y-12" id="experience-list"></div>
     <!-- Chase Leadership Engagement -->
     <div class="mt-12 p-6 rounded-xl border-2" style="border-color:#005EB8;background:linear-gradient(135deg, #F4F7F9 0%, #EFF6FF 100%)">
@@ -348,11 +352,12 @@ document.getElementById('kpis-grid').innerHTML=kpis.map(k=>`<div class="kpi-card
 
 // Experience
 const EXP=[
-  {title:"Vice President, Business Analysis Manager",company:"Chase Bank — Tempe, AZ",dates:"2024 — Present",bullets:["Strategic planning and execution of firm initiatives, product releases, and annual KPIs in Card Lending with focuses on lending, technology innovation, ML/AI, and reporting.","Managed Lending strategic roadmap encompassing initiatives related to technology, risk, marketing, and audit.","Established customer outreach texting program, leading to increased $20MM in revenue over 5 years.","Led team of Executive Directors in meeting and exceeding line-of-business KPIs including revenue and service levels.","Developed business cases supporting financial justification of strategic and transformational initiatives for lending."]},
-  {title:"Vice President, Faculty III",company:"Chase Bank — Tempe, AZ",dates:"2020 — 2024",bullets:["Maintained SharePoint compliance while enhancing employee experience through innovative solutions.","Subject Matter Expert for SharePoint Compliance.","Crafted and managed project marketplace to assist leaders with project needs and employee upskilling.","Identified and executed process improvement initiatives, increasing employee engagement in training by over 40%."]},
-  {title:"Associate, Business Process Analyst",company:"Chase Bank — Tempe, AZ",dates:"2014 — 2020",bullets:["Project management of firm initiatives and owner of software releases and training content updates.","Managed process improvement team leading to misrouted call reduction of 30%.","Managed training for release of a new system to over 400 employees.","Crafted reports monitoring the creation and upkeep of over 100 procedures."]}
+  {title:"Vice President, Business Analysis Manager (Issue Resolution)",dates:"2026 — Present",bullets:["Established and managing formal OKR process for Issue Resolution.","Designed capacity tracking for SMEs with dynamically updating graphs to show level of effort and work distribution.","Redesigned Issue Resolution SharePoint into a website with time saving tools that include one-click PowerPoint slide generation, alerts, intake, and more.","Crafted the new Innovation Hub that Issue Resolution owns with enhanced reporting, alerts, and intake forms."]},
+  {title:"Vice President, Business Analysis Manager (Strategy)",dates:"2024 — 2026",bullets:["Strategic planning and execution of firm initiatives, product releases, and annual KPIs in Card Lending with focuses on lending, technology innovation, ML/AI, and reporting.","Managed Lending strategic roadmap encompassing initiatives related to technology, risk, marketing, and audit.","Established customer outreach texting program, leading to increased $20MM in revenue over 5 years.","Led team of Executive Directors in meeting and exceeding line-of-business KPIs including revenue and service levels.","Developed business cases supporting financial justification of strategic and transformational initiatives for lending."]},
+  {title:"Vice President, Faculty III",dates:"2020 — 2024",bullets:["Maintained SharePoint compliance while enhancing employee experience through innovative solutions.","Subject Matter Expert for SharePoint Compliance.","Crafted and managed project marketplace to assist leaders with project needs and employee upskilling.","Identified and executed process improvement initiatives, increasing employee engagement in training by over 40%."]},
+  {title:"Associate, Business Process Analyst",dates:"2014 — 2020",bullets:["Project management of firm initiatives and owner of software releases and training content updates.","Managed process improvement team leading to misrouted call reduction of 30%.","Managed training for release of a new system to over 400 employees.","Crafted reports monitoring the creation and upkeep of over 100 procedures."]}
 ];
-document.getElementById('experience-list').innerHTML=EXP.map(j=>`<div class="timeline-item"><div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3"><h3 class="text-lg sm:text-xl font-medium" style="color:#0A2F6B">${j.title}</h3><span class="text-sm font-medium" style="color:#005EB8">${j.dates}</span></div><p class="text-sm mb-4" style="color:#4B5563">${j.company}</p><ul class="space-y-2">${j.bullets.map(b=>`<li class="flex gap-2 text-sm leading-relaxed" style="color:#4B5563"><i data-lucide="chevron-right" style="width:14px;height:14px;color:#005EB8;flex-shrink:0;margin-top:4px"></i><span>${b}</span></li>`).join('')}</ul></div>`).join('');
+document.getElementById('experience-list').innerHTML=EXP.map(j=>`<div class="timeline-item"><div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3"><h3 class="text-lg sm:text-xl font-medium" style="color:#0A2F6B">${j.title}</h3><span class="text-sm font-medium" style="color:#005EB8">${j.dates}</span></div><ul class="space-y-2">${j.bullets.map(b=>`<li class="flex gap-2 text-sm leading-relaxed" style="color:#4B5563"><i data-lucide="chevron-right" style="width:14px;height:14px;color:#005EB8;flex-shrink:0;margin-top:4px"></i><span>${b}</span></li>`).join('')}</ul></div>`).join('');
 
 // Skills
 const SKILLS=["Agile Project Management","Strategic Execution","Data Analytics & Reporting","Credit Risk Management","Executive Presentations","Leadership & Influence","Artificial Intelligence","Machine Learning","Root Cause Analysis","Fraud Investigations","Risk Management","Training Development","Advanced Excel","SharePoint Design","Website Design","OKR Management"];
