@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Fair Lending Quiz Generator — Prototype</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/StevenMKay/Resume/55c3fa3a633d5fbfe24fbfed37e80d34c70a45bd/Steven%20Favicon.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'IBM Plex Sans', sans-serif; margin: 0; background: #F4F5F7; color: #111827; }
+  .fade-in { animation: fadeIn 0.4s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .typing-dot { animation: blink 1.4s infinite both; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+  .quiz-option { transition: all 0.15s ease; cursor: pointer; }
+  .quiz-option:hover:not(.selected):not(.disabled) { background: #F0F9FF; border-color: #BAE6FD; }
+  .quiz-option.selected { border-color: #005EB8; background: #EFF6FF; }
+  .quiz-option.correct { border-color: #047857; background: #D1FAE5; }
+  .quiz-option.incorrect { border-color: #B91C1C; background: #FEE2E2; }
+  .quiz-option.disabled { cursor: default; opacity: 0.7; }
+  .quiz-option.disabled.show-correct { opacity: 1; border-color: #047857; background: #D1FAE5; }
+  .progress-segment { transition: background-color 0.3s ease; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-white border-b" style="border-color:#E5E7EB">
+  <div class="max-w-[1600px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
+    <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+      <a href="index.html" class="flex items-center gap-1 text-sm font-medium hover:opacity-70 flex-shrink-0" style="color:#005EB8" data-testid="back-to-plan-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <span class="hidden sm:inline">90-Day Plan</span>
+      </a>
+      <div class="w-px h-6 bg-gray-200 hidden sm:block"></div>
+      <div class="flex items-center gap-2 min-w-0">
+        <svg class="flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <h1 class="text-sm sm:text-base font-semibold tracking-tight truncate" style="font-family:'Chivo'" data-testid="page-title">AI Fair Lending Quiz Generator</h1>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-3">
+      <a href="risk-assessor.html" class="text-xs font-medium px-3 py-1.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563" data-testid="nav-risk-assessor">Risk Assessor</a>
+      <a href="audit-dashboard.html" class="text-xs font-medium px-3 py-1.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563" data-testid="nav-audit-dashboard">Dashboard</a>
+      <a href="timeline.html" class="text-xs font-medium px-3 py-1.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563" data-testid="nav-timeline">Timeline</a>
+      <span class="text-xs font-medium px-2 py-1 rounded-sm" style="background:#FEF3C7;color:#B45309" data-testid="prototype-badge">Prototype Demo</span>
+    </div>
+    <div class="sm:hidden flex items-center gap-2">
+      <span class="text-[10px] font-medium px-1.5 py-0.5 rounded-sm" style="background:#FEF3C7;color:#B45309">Demo</span>
+      <div class="relative">
+        <button onclick="document.getElementById('mobile-nav-qg').classList.toggle('hidden')" class="p-2 rounded-sm hover:bg-gray-100" data-testid="mobile-menu-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div id="mobile-nav-qg" class="hidden absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-50 py-2 min-w-[160px]" style="border-color:#E5E7EB">
+          <a href="index.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#005EB8">90-Day Plan</a>
+          <a href="risk-assessor.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#4B5563">Risk Assessor</a>
+          <a href="audit-dashboard.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#4B5563">Dashboard</a>
+          <a href="timeline.html" class="block px-4 py-2 text-sm hover:bg-gray-50" style="color:#4B5563">Timeline</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+  <!-- Intro -->
+  <div class="border rounded-sm p-5" style="border-color:#E5E7EB;background:#FFFFFF" data-testid="intro-section">
+    <div class="flex items-start gap-3">
+      <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:#EFF6FF">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <div>
+        <h2 class="text-base font-semibold mb-1" style="font-family:'Chivo';color:#0A2F6B">AI-Powered Fair Lending Quiz Generator</h2>
+        <p class="text-sm leading-relaxed" style="color:#4B5563">Describe a project or scenario being implemented and the AI will generate a targeted quiz to test employees' understanding of potential fair lending risks, audit implications, and required compliance controls. Use this tool to reinforce training and identify knowledge gaps across your team.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Section -->
+  <div id="input-section" data-testid="input-section">
+    <h2 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color:#4B5563;font-family:'Chivo'">Describe a Project or Scenario</h2>
+    <div class="border rounded-sm p-5" style="border-color:#E5E7EB;background:#FFFFFF">
+      <textarea id="scenario-input" data-testid="scenario-input" placeholder="e.g., A new credit card rewards program will target customers based on spending categories, income brackets, and geographic regions. Higher-income customers in urban areas receive premium reward rates..." class="w-full border rounded-sm p-4 text-sm min-h-[120px] resize-y focus:outline-none focus:ring-1" style="border-color:#E5E7EB;focus:ring-color:#005EB8"></textarea>
+      <div class="flex items-center justify-between mt-4">
+        <div class="flex items-center gap-3">
+          <label class="text-xs font-medium" style="color:#4B5563">Questions:</label>
+          <select id="question-count" data-testid="question-count-select" class="text-xs border rounded-sm px-2 py-1.5" style="border-color:#E5E7EB">
+            <option value="3">3 Questions</option>
+            <option value="5" selected>5 Questions</option>
+            <option value="8">8 Questions</option>
+          </select>
+        </div>
+        <button id="generate-btn" data-testid="generate-quiz-btn" onclick="generateQuiz()" class="flex items-center gap-2 px-5 py-2.5 rounded-sm font-medium text-sm text-white hover:opacity-90 transition-opacity" style="background:#005EB8">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26z"/></svg>
+          Generate Quiz
+        </button>
+      </div>
+    </div>
+
+    <!-- Example Scenarios -->
+    <div class="mt-4">
+      <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:#4B5563">Example Scenarios</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="example-scenarios" data-testid="example-scenarios"></div>
+    </div>
+  </div>
+
+  <!-- Quiz Output -->
+  <div id="quiz-output" class="hidden" data-testid="quiz-output">
+    <!-- Filled dynamically -->
+  </div>
+
+</main>
+
+<script>
+// === QUIZ DATA BANK ===
+const QUIZ_BANK = {
+  marketing_geo: {
+    scenario: "A new credit card rewards program will segment customers by income level and geographic region to offer premium cashback rates. Higher-income customers in metropolitan areas receive enhanced rewards while suburban and rural customers receive standard rates.",
+    label: "Evaluate rewards program with income and geographic segmentation",
+    icon: "target",
+    questions: [
+      {
+        type: "multiple-choice",
+        question: "What is the primary fair lending risk when segmenting customers by income level and geographic region for a rewards program?",
+        options: [
+          "Increased operational costs for program administration",
+          "Potential proxy discrimination against protected classes under ECOA, as income and geography correlate with race and national origin",
+          "Reduced customer engagement in lower-tier reward levels",
+          "Data storage compliance requirements under GLBA"
+        ],
+        correct: 1,
+        explanation: "Income and geographic segmentation can serve as proxies for race, ethnicity, and national origin. Under ECOA and Reg B, practices that create disparate impact on protected classes\u2014even without discriminatory intent\u2014can result in regulatory findings. The OCC and CFPB have specifically flagged geographic-based product differentiation as a fair lending risk area."
+      },
+      {
+        type: "true-false",
+        question: "Geographic segmentation in marketing offers is always considered a safe practice under fair lending regulations as long as the criteria don't explicitly reference race or ethnicity.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Fair lending law covers both disparate treatment (intentional discrimination) and disparate impact (facially neutral practices that disproportionately affect protected classes). Geographic criteria like zip codes and metropolitan designations are well-documented proxies for race and national origin, even when race is never mentioned. Regulators evaluate outcomes, not just intent."
+      },
+      {
+        type: "multiple-choice",
+        question: "Which regulation is most directly implicated when marketing offers systematically exclude or disadvantage certain demographic segments?",
+        options: [
+          "Gramm-Leach-Bliley Act (GLBA)",
+          "Fair Credit Reporting Act (FCRA)",
+          "Equal Credit Opportunity Act (ECOA) / Regulation B",
+          "Sarbanes-Oxley Act (SOX)"
+        ],
+        correct: 2,
+        explanation: "ECOA (implemented by Reg B) prohibits discrimination in any aspect of a credit transaction, including marketing and pre-screened offers. When reward program tiers effectively create different terms based on criteria that correlate with protected classes, this falls squarely under ECOA scrutiny."
+      },
+      {
+        type: "multiple-choice",
+        question: "What testing should be conducted BEFORE launching this rewards program to mitigate fair lending risk?",
+        options: [
+          "A/B testing on email open rates across customer segments",
+          "Statistical analysis of reward tier distribution across protected class demographics to identify disparate impact",
+          "Focus group testing with high-income customers only",
+          "Load testing of the rewards processing system"
+        ],
+        correct: 1,
+        explanation: "Pre-launch disparate impact analysis is essential. This involves mapping the proposed reward tier assignments against demographic data to determine whether the segmentation criteria produce statistically significant differences in outcomes across protected classes. This analysis should be documented and retained for audit readiness."
+      },
+      {
+        type: "true-false",
+        question: "If the rewards program segmentation was designed by a third-party vendor, the bank is not responsible for fair lending compliance of that segmentation model.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Under OCC guidance and ECOA, the financial institution retains full responsibility for fair lending compliance regardless of whether a vendor designed the segmentation model. Third-party risk management standards (OCC Bulletin 2013-29) require the bank to validate vendor models for fair lending impact before deployment."
+      },
+      {
+        type: "multiple-choice",
+        question: "During an OCC fair lending examination, which finding would most likely result from this rewards program?",
+        options: [
+          "Matter Requiring Attention (MRA) for insufficient model documentation",
+          "Matter Requiring Immediate Attention (MRIA) for potential redlining through geographic exclusion of majority-minority areas from premium rewards",
+          "Satisfactory rating with recommendations for enhanced monitoring",
+          "No findings\u2014rewards programs are outside fair lending examination scope"
+        ],
+        correct: 1,
+        explanation: "If the premium reward areas disproportionately exclude majority-minority geographies, examiners could issue an MRIA for redlining patterns in product terms. This is particularly serious because it combines geographic discrimination with differential economic benefit, creating both disparate impact and potential disparate treatment concerns."
+      },
+      {
+        type: "multiple-choice",
+        question: "What documentation should be maintained to demonstrate audit readiness for this program?",
+        options: [
+          "Marketing budget spreadsheets and vendor invoices",
+          "Pre-launch fair lending impact analysis, ongoing monitoring results, and business justification for segmentation criteria",
+          "Customer complaint logs only",
+          "Executive approval emails without supporting analysis"
+        ],
+        correct: 1,
+        explanation: "Comprehensive documentation is required: the business justification for using income and geography as segmentation criteria, pre-launch fair lending testing results, ongoing monitoring of tier distribution across demographics, and any remediation actions taken. This documentation should be centralized and exam-ready per the audit readiness framework."
+      },
+      {
+        type: "true-false",
+        question: "Offering standard rewards (rather than no rewards) to the lower segment eliminates fair lending risk because all customers receive some benefit.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Disparate impact analysis examines whether there are statistically significant differences in outcomes across protected classes\u2014not whether everyone receives something. If the premium tier disproportionately benefits one demographic group while the standard tier disproportionately applies to another, the differential still constitutes a fair lending concern."
+      }
+    ]
+  },
+  ai_credit_limit: {
+    scenario: "The data science team is deploying an AI model to automatically adjust credit limits based on transaction velocity, merchant category codes, social media activity indicators, and neighborhood-level economic data. The model was trained on 3 years of historical account performance data.",
+    label: "Assess AI model for credit limit adjustment decisions",
+    icon: "cpu",
+    questions: [
+      {
+        type: "multiple-choice",
+        question: "What fair lending concern does using 'neighborhood-level economic data' as a feature in credit limit decisions raise?",
+        options: [
+          "Increased data storage requirements under GLBA",
+          "Potential redlining and proxy discrimination, as neighborhood economic indicators correlate with racial demographics",
+          "Higher model complexity leading to longer processing times",
+          "Increased computational infrastructure costs"
+        ],
+        correct: 1,
+        explanation: "Neighborhood-level economic data (median income, property values, employment rates by geography) is a well-documented proxy for race and ethnicity. Using such features in credit decisions can replicate historical patterns of geographic discrimination (redlining), even when the model has no explicit racial inputs. Regulators specifically scrutinize geographic features in automated credit decisions."
+      },
+      {
+        type: "true-false",
+        question: "Using social media activity as a factor in credit limit decisions is permissible under FCRA without any additional fair lending review.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Social media data raises multiple concerns: FCRA permissible purpose requirements, potential correlation with protected classes (age, race, national origin based on language and cultural content), and limited ability to provide adverse action reasons that are meaningful to consumers. Both FCRA and ECOA require that data used in credit decisions not create disparate impact."
+      },
+      {
+        type: "multiple-choice",
+        question: "If this AI model produces statistically different credit limit outcomes across racial groups, this is known as:",
+        options: [
+          "Model overfitting to the training dataset",
+          "Disparate impact\u2014where a facially neutral practice disproportionately affects a protected class",
+          "Adverse selection in the customer portfolio",
+          "Moral hazard in credit risk management"
+        ],
+        correct: 1,
+        explanation: "Disparate impact occurs when a neutral practice (automated credit limit model) produces outcomes that disproportionately burden a protected class. Unlike disparate treatment, intent is not required\u2014the statistical outcome alone can constitute a violation. The institution must demonstrate the practice serves a legitimate business necessity and no less discriminatory alternative exists."
+      },
+      {
+        type: "multiple-choice",
+        question: "What governance requirement applies to this AI model before it can be deployed to production?",
+        options: [
+          "Executive sponsor sign-off only",
+          "Full SR 11-7 compliant model validation including fair lending testing, documentation, and Model Risk Management committee review",
+          "IT security review and penetration testing",
+          "Customer focus group approval"
+        ],
+        correct: 1,
+        explanation: "SR 11-7 (Supervisory Guidance on Model Risk Management) requires independent validation, comprehensive documentation, and ongoing monitoring for models used in credit decisions. For AI/ML models, this includes explainability assessment, fair lending testing across protected classes, and review by the Model Risk Management committee before production deployment."
+      },
+      {
+        type: "true-false",
+        question: "Because the model was trained on 3 years of historical data, the outputs are inherently fair and unbiased since they reflect actual customer behavior.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Historical data often embeds past discriminatory patterns. If previous credit limit decisions were influenced by biased practices, the model will learn and perpetuate those biases. This is a fundamental challenge in AI/ML for credit decisions\u2014models can amplify historical disparities rather than correct them. Pre-deployment bias testing is essential."
+      },
+      {
+        type: "multiple-choice",
+        question: "Which of the following would be the MOST appropriate first step if disparate impact testing reveals statistically significant differences in credit limit outcomes?",
+        options: [
+          "Deploy the model anyway and monitor results quarterly",
+          "Remove all geographic features from the model and re-validate to assess whether a less discriminatory alternative achieves comparable business performance",
+          "Add race as an explicit input to 'correct' the bias",
+          "Increase the training data to 5 years to dilute the effect"
+        ],
+        correct: 1,
+        explanation: "Under the three-part disparate impact framework, the institution must first explore less discriminatory alternatives. Removing or modifying the proxy features (like neighborhood data) and re-testing model performance is the standard approach. Simply adding more historical data would likely amplify existing bias, and using race as an input creates disparate treatment concerns."
+      },
+      {
+        type: "multiple-choice",
+        question: "What ongoing monitoring is required after this model is deployed?",
+        options: [
+          "Annual financial performance review only",
+          "Continuous model drift monitoring, periodic fair lending testing, and real-time performance tracking against validation benchmarks",
+          "Quarterly executive briefing slides",
+          "Monthly IT uptime reporting"
+        ],
+        correct: 1,
+        explanation: "AI models require continuous monitoring: drift detection (ensuring model behavior hasn't changed from validated state), periodic fair lending re-testing (quarterly or when material changes occur), and performance tracking against the metrics established during validation. This aligns with both SR 11-7 requirements and the audit readiness framework."
+      },
+      {
+        type: "multiple-choice",
+        question: "During an audit, what specific documentation would examiners request for this AI credit limit model?",
+        options: [
+          "Source code only",
+          "Model development documentation, feature importance analysis, fair lending test results, validation reports, and ongoing monitoring logs",
+          "Vendor contract and service level agreements",
+          "Customer satisfaction survey results"
+        ],
+        correct: 1,
+        explanation: "Examiners expect comprehensive documentation: model methodology and development rationale, feature selection justification (especially for proxy-risk features), statistical fair lending test results, independent validation reports, and ongoing monitoring evidence. The documentation should demonstrate that fair lending was considered at every stage of the model lifecycle."
+      }
+    ]
+  },
+  collections_outreach: {
+    scenario: "The collections team is redesigning their outreach strategy to prioritize delinquent accounts based on balance size. Higher-balance accounts will receive more frequent phone contact during business hours, while lower-balance accounts will primarily receive automated text messages and emails on a less frequent schedule.",
+    label: "Review collections outreach strategy for fair lending impact",
+    icon: "phone",
+    questions: [
+      {
+        type: "true-false",
+        question: "Prioritizing collections outreach solely by balance size poses no fair lending risk because balance is a financially objective criterion.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. While balance size is a financial metric, it can correlate with protected class characteristics. If higher-balance accounts disproportionately belong to certain demographic groups, the differentiated contact strategy creates disparate impact in servicing. The CFPB has specifically identified collections practices as a fair lending examination focus area."
+      },
+      {
+        type: "multiple-choice",
+        question: "What analysis should be conducted before implementing this tiered collections strategy?",
+        options: [
+          "Cost-benefit analysis of contact channel pricing only",
+          "Disparate impact testing to determine if balance tiers and contact frequency create demographic disparities",
+          "Customer satisfaction survey about preferred contact methods",
+          "Vendor due diligence on the text messaging platform"
+        ],
+        correct: 1,
+        explanation: "Pre-implementation disparate impact analysis is essential. This involves mapping the proposed balance tiers against demographic data to determine whether the tiered contact strategy produces statistically significant differences across protected classes. Both contact frequency and channel selection (phone vs. text) should be tested for potential disparate impact."
+      },
+      {
+        type: "multiple-choice",
+        question: "If higher-balance accounts disproportionately belong to a specific racial or ethnic group, what audit finding could result from this collections strategy?",
+        options: [
+          "Insufficient documentation of collections procedures",
+          "Disparate treatment in collections practices\u2014providing preferential servicing based on criteria that correlate with protected class membership",
+          "Model governance failure for the collections scoring system",
+          "HMDA reporting error in servicing records"
+        ],
+        correct: 1,
+        explanation: "When a collections strategy provides materially different levels of service (more personal attention via phone calls vs. automated messages) based on criteria that correlate with protected class demographics, this can constitute both disparate impact and potentially disparate treatment. Examiners evaluate whether the differential servicing is justified by legitimate business necessity."
+      },
+      {
+        type: "true-false",
+        question: "Using phone calls for high-balance accounts and text messages for low-balance accounts is acceptable because both groups are being contacted.",
+        options: ["True", "False"],
+        correct: 1,
+        explanation: "False. Fair lending analysis in servicing looks at the quality and effectiveness of contact, not just whether contact occurs. If phone calls result in better resolution outcomes (payment plans, forbearance options) than automated texts, the differential could create disparate outcomes in collections resolution rates across demographic groups."
+      },
+      {
+        type: "multiple-choice",
+        question: "What would strengthen audit readiness for this collections strategy?",
+        options: [
+          "Documenting the cost savings from automated messaging",
+          "Conducting pre-implementation fair lending testing, documenting business justification, and establishing ongoing monitoring of contact outcomes by demographic group",
+          "Getting executive approval without supporting analysis",
+          "Training collectors on phone etiquette only"
+        ],
+        correct: 1,
+        explanation: "Comprehensive audit readiness requires: documented business justification for the tiered approach, pre-implementation testing showing no prohibited disparate impact, and ongoing monitoring comparing contact frequency, channel, and resolution outcomes across protected class demographics. This evidence should be centralized and readily accessible for examiner requests."
+      },
+      {
+        type: "multiple-choice",
+        question: "Which regulatory framework specifically addresses fair lending risks in account servicing and collections?",
+        options: [
+          "Truth in Lending Act (TILA) only",
+          "ECOA / Reg B and UDAAP (Unfair, Deceptive, or Abusive Acts or Practices)",
+          "Bank Secrecy Act (BSA) / AML",
+          "Community Reinvestment Act (CRA)"
+        ],
+        correct: 1,
+        explanation: "ECOA prohibits discrimination in all aspects of a credit transaction, including servicing and collections. Additionally, UDAAP prohibits practices that disproportionately harm consumers. The CFPB has used both frameworks to address discriminatory collections practices. The combination creates a dual regulatory exposure for tiered collections strategies."
+      },
+      {
+        type: "multiple-choice",
+        question: "If this strategy is implemented and a fair lending concern is later identified, what is the expected remediation timeline per regulatory standards?",
+        options: [
+          "No timeline\u2014the bank can remediate at its own pace",
+          "Within 60-90 days for high-severity findings, with documented corrective action plan, root cause analysis, and ongoing monitoring",
+          "Within 1 year as part of the annual compliance review",
+          "Only if a formal enforcement action is issued"
+        ],
+        correct: 1,
+        explanation: "Regulatory expectations for fair lending findings require prompt remediation. High-severity findings (MRAs/MRIAs) typically carry 60-90 day corrective action timelines. The response must include root cause analysis, corrective actions, customer remediation where applicable, and enhanced monitoring to prevent recurrence. Delayed remediation can escalate findings to enforcement actions."
+      },
+      {
+        type: "true-false",
+        question: "Documenting the business justification for using balance-based prioritization before implementation would strengthen the bank's position during a fair lending examination.",
+        options: ["True", "False"],
+        correct: 0,
+        explanation: "True. Contemporaneous documentation of business justification is a key element of the three-part disparate impact defense. If the bank can demonstrate that balance-based prioritization serves a legitimate business need (e.g., maximizing recovery) and that alternatives were considered, this significantly strengthens the compliance position during examination."
+      }
+    ]
+  }
+};
+
+// Render example scenarios
+const EXAMPLES = [
+  { key: "marketing_geo", label: QUIZ_BANK.marketing_geo.label, desc: QUIZ_BANK.marketing_geo.scenario.substring(0, 120) + "..." },
+  { key: "ai_credit_limit", label: QUIZ_BANK.ai_credit_limit.label, desc: QUIZ_BANK.ai_credit_limit.scenario.substring(0, 120) + "..." },
+  { key: "collections_outreach", label: QUIZ_BANK.collections_outreach.label, desc: QUIZ_BANK.collections_outreach.scenario.substring(0, 120) + "..." }
+];
+
+document.getElementById('example-scenarios').innerHTML = EXAMPLES.map(e => `
+  <button onclick="loadExample('${e.key}')" class="text-left border rounded-sm p-4 hover:shadow-sm hover:-translate-y-px transition-all" style="border-color:#E5E7EB;background:#FFFFFF" data-testid="example-${e.key}">
+    <div class="flex items-center gap-2 mb-2">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#005EB8" stroke-width="2"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26z"/></svg>
+      <span class="text-sm font-semibold" style="color:#0A2F6B">${e.label}</span>
+    </div>
+    <p class="text-xs leading-relaxed" style="color:#4B5563">${e.desc}</p>
+  </button>
+`).join('');
+
+function loadExample(key) {
+  document.getElementById('scenario-input').value = QUIZ_BANK[key].scenario;
+}
+
+// === STATE ===
+let currentQuiz = null;
+let currentQuestion = 0;
+let answers = [];
+let submitted = [];
+
+function generateQuiz() {
+  const input = document.getElementById('scenario-input').value.trim();
+  if (!input) return;
+
+  const count = parseInt(document.getElementById('question-count').value);
+  const output = document.getElementById('quiz-output');
+  output.classList.remove('hidden');
+
+  // Show loading
+  output.innerHTML = `
+    <div class="border rounded-sm p-8 text-center fade-in" style="border-color:#E5E7EB;background:#FFFFFF" data-testid="quiz-loading">
+      <div class="flex items-center justify-center gap-1 mb-4">
+        <div class="w-2.5 h-2.5 rounded-full typing-dot" style="background:#005EB8"></div>
+        <div class="w-2.5 h-2.5 rounded-full typing-dot" style="background:#005EB8"></div>
+        <div class="w-2.5 h-2.5 rounded-full typing-dot" style="background:#005EB8"></div>
+      </div>
+      <p class="text-sm font-medium" style="color:#0A2F6B">Analyzing scenario for fair lending risk factors...</p>
+      <p class="text-xs mt-1" style="color:#4B5563">Generating targeted assessment questions</p>
+    </div>
+  `;
+
+  // Determine which quiz to show
+  const lower = input.toLowerCase();
+  let quizKey = "marketing_geo"; // default
+  const hasAI = /\bai\b/.test(lower) || lower.includes("machine learning") || lower.includes("algorithm") || lower.includes("social media") || lower.includes("neighborhood");
+  const hasCollections = lower.includes("collection") || lower.includes("delinquen") || lower.includes("outreach") || lower.includes("balance size");
+  if (hasCollections && !hasAI) {
+    quizKey = "collections_outreach";
+  } else if (hasAI || lower.includes("model") && !hasCollections) {
+    quizKey = "ai_credit_limit";
+  }
+
+  const bank = QUIZ_BANK[quizKey];
+  currentQuiz = bank.questions.slice(0, count);
+  currentQuestion = 0;
+  answers = new Array(currentQuiz.length).fill(-1);
+  submitted = new Array(currentQuiz.length).fill(false);
+
+  // Simulate AI delay
+  setTimeout(() => {
+    renderQuiz();
+  }, 2200);
+}
+
+function renderQuiz() {
+  const output = document.getElementById('quiz-output');
+  const q = currentQuiz[currentQuestion];
+  const total = currentQuiz.length;
+  const answeredCount = submitted.filter(Boolean).length;
+
+  // Progress bar
+  let progressHTML = `<div class="flex gap-1 mb-6">`;
+  for (let i = 0; i < total; i++) {
+    let color = '#E5E7EB';
+    if (submitted[i]) {
+      color = answers[i] === currentQuiz[i].correct ? '#047857' : '#B91C1C';
+    } else if (i === currentQuestion) {
+      color = '#005EB8';
+    }
+    progressHTML += `<div class="progress-segment flex-1 h-1.5 rounded-full cursor-pointer" style="background:${color}" onclick="goToQuestion(${i})" data-testid="progress-segment-${i}"></div>`;
+  }
+  progressHTML += `</div>`;
+
+  // Question card
+  const isSubmitted = submitted[currentQuestion];
+  const selectedAnswer = answers[currentQuestion];
+
+  let optionsHTML = q.options.map((opt, idx) => {
+    let classes = 'quiz-option';
+    let extraStyle = '';
+    let marker = '';
+
+    if (isSubmitted) {
+      classes += ' disabled';
+      if (idx === q.correct) {
+        classes += ' correct show-correct';
+        marker = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2.5" class="flex-shrink-0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+      } else if (idx === selectedAnswer && idx !== q.correct) {
+        classes += ' incorrect';
+        marker = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2.5" class="flex-shrink-0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+      }
+    } else {
+      if (idx === selectedAnswer) {
+        classes += ' selected';
+      }
+    }
+
+    const letter = q.type === 'true-false' ? '' : String.fromCharCode(65 + idx) + '. ';
+
+    return `<div class="${classes} flex items-center gap-3 border rounded-sm p-3.5" style="border-color:#E5E7EB" onclick="selectAnswer(${idx})" data-testid="option-${idx}">
+      ${marker || `<div class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color:${idx === selectedAnswer && !isSubmitted ? '#005EB8' : '#D1D5DB'}">
+        ${idx === selectedAnswer && !isSubmitted ? '<div class="w-2 h-2 rounded-full" style="background:#005EB8"></div>' : ''}
+      </div>`}
+      <span class="text-sm leading-relaxed">${letter}${opt}</span>
+    </div>`;
+  }).join('');
+
+  // Explanation (shown after submit)
+  let explanationHTML = '';
+  if (isSubmitted) {
+    const isCorrect = selectedAnswer === q.correct;
+    explanationHTML = `
+      <div class="mt-4 p-4 rounded-sm border fade-in" style="border-color:${isCorrect ? '#6EE7B7' : '#FCA5A5'};background:${isCorrect ? '#F0FDF4' : '#FEF2F2'}" data-testid="explanation-box">
+        <div class="flex items-center gap-2 mb-2">
+          ${isCorrect
+            ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-sm font-semibold" style="color:#047857">Correct</span>'
+            : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span class="text-sm font-semibold" style="color:#B91C1C">Incorrect</span>'}
+        </div>
+        <p class="text-sm leading-relaxed" style="color:#374151">${q.explanation}</p>
+      </div>
+    `;
+  }
+
+  // Navigation
+  const isFirst = currentQuestion === 0;
+  const isLast = currentQuestion === total - 1;
+  const allDone = submitted.every(Boolean);
+
+  let navHTML = `<div class="flex items-center justify-between mt-6">
+    <button onclick="prevQuestion()" ${isFirst ? 'disabled' : ''} class="flex items-center gap-1 text-sm font-medium px-4 py-2 rounded-sm border hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed" style="border-color:#E5E7EB;color:#4B5563" data-testid="prev-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Previous
+    </button>
+    <div class="flex items-center gap-3">
+      ${!isSubmitted ? `<button onclick="submitAnswer()" ${selectedAnswer === -1 ? 'disabled' : ''} class="text-sm font-medium px-5 py-2 rounded-sm text-white disabled:opacity-40 disabled:cursor-not-allowed" style="background:#005EB8" data-testid="submit-answer-btn">Check Answer</button>` : ''}
+      ${isSubmitted && !isLast ? `<button onclick="nextQuestion()" class="flex items-center gap-1 text-sm font-medium px-4 py-2 rounded-sm text-white" style="background:#005EB8" data-testid="next-btn">Next <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>` : ''}
+      ${isSubmitted && isLast && allDone ? `<button onclick="showResults()" class="flex items-center gap-1 text-sm font-medium px-5 py-2 rounded-sm text-white" style="background:#047857" data-testid="view-results-btn">View Results <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></button>` : ''}
+    </div>
+  </div>`;
+
+  output.innerHTML = `
+    <div class="fade-in">
+      ${progressHTML}
+      <div class="border rounded-sm p-6" style="border-color:#E5E7EB;background:#FFFFFF" data-testid="question-card">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider" style="color:#005EB8">Question ${currentQuestion + 1} of ${total}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${q.type === 'true-false' ? '#F3F4F6' : '#EFF6FF'};color:${q.type === 'true-false' ? '#4B5563' : '#005EB8'}">${q.type === 'true-false' ? 'True / False' : 'Multiple Choice'}</span>
+          </div>
+          <span class="text-xs" style="color:#9CA3AF">${answeredCount} of ${total} answered</span>
+        </div>
+        <p class="text-base font-medium leading-relaxed mb-5" style="color:#111827">${q.question}</p>
+        <div class="space-y-2.5">
+          ${optionsHTML}
+        </div>
+        ${explanationHTML}
+      </div>
+      ${navHTML}
+    </div>
+  `;
+}
+
+function selectAnswer(idx) {
+  if (submitted[currentQuestion]) return;
+  answers[currentQuestion] = idx;
+  renderQuiz();
+}
+
+function submitAnswer() {
+  if (answers[currentQuestion] === -1) return;
+  submitted[currentQuestion] = true;
+  renderQuiz();
+}
+
+function nextQuestion() {
+  if (currentQuestion < currentQuiz.length - 1) {
+    currentQuestion++;
+    renderQuiz();
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    renderQuiz();
+  }
+}
+
+function goToQuestion(idx) {
+  currentQuestion = idx;
+  renderQuiz();
+}
+
+function showResults() {
+  const output = document.getElementById('quiz-output');
+  const total = currentQuiz.length;
+  const correctCount = answers.filter((a, i) => a === currentQuiz[i].correct).length;
+  const pct = Math.round((correctCount / total) * 100);
+
+  let grade, gradeColor, gradeBg, message;
+  if (pct >= 90) { grade = 'Excellent'; gradeColor = '#047857'; gradeBg = '#D1FAE5'; message = 'Outstanding understanding of fair lending risks and compliance requirements. This employee demonstrates readiness for audit-facing responsibilities.'; }
+  else if (pct >= 70) { grade = 'Proficient'; gradeColor = '#005EB8'; gradeBg = '#DBEAFE'; message = 'Good working knowledge of fair lending concepts. Recommended: review missed topics and retake in 30 days to reinforce understanding.'; }
+  else if (pct >= 50) { grade = 'Developing'; gradeColor = '#B45309'; gradeBg = '#FEF3C7'; message = 'Foundational understanding present but gaps identified. Recommended: complete fair lending training module and retake assessment within 2 weeks.'; }
+  else { grade = 'Needs Improvement'; gradeColor = '#B91C1C'; gradeBg = '#FEE2E2'; message = 'Significant knowledge gaps in fair lending risk identification. Recommended: attend instructor-led fair lending training session before retaking assessment.'; }
+
+  // Per-question breakdown
+  let breakdownHTML = currentQuiz.map((q, i) => {
+    const isCorrect = answers[i] === q.correct;
+    return `<div class="flex items-start gap-3 p-3 rounded-sm border" style="border-color:#E5E7EB;background:${isCorrect ? '#F0FDF4' : '#FEF2F2'}" data-testid="result-item-${i}">
+      <div class="flex-shrink-0 mt-0.5">
+        ${isCorrect
+          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#047857" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'}
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium mb-1" style="color:#111827">Q${i + 1}: ${q.question.substring(0, 80)}${q.question.length > 80 ? '...' : ''}</p>
+        <p class="text-xs" style="color:#4B5563">${isCorrect ? 'Answered correctly' : 'Correct answer: ' + q.options[q.correct]}</p>
+      </div>
+    </div>`;
+  }).join('');
+
+  output.innerHTML = `
+    <div class="fade-in space-y-4" data-testid="results-section">
+      <!-- Score Card -->
+      <div class="border rounded-sm p-6 text-center" style="border-color:#E5E7EB;background:#FFFFFF" data-testid="score-card">
+        <div class="relative inline-flex items-center justify-center mb-4" style="width:100px;height:100px">
+          <svg width="100" height="100" class="-rotate-90">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="${gradeColor}" stroke-width="8"
+              stroke-dasharray="${2 * Math.PI * 42}"
+              stroke-dashoffset="${2 * Math.PI * 42 - (pct / 100) * 2 * Math.PI * 42}"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="absolute text-center">
+            <span class="text-2xl font-bold" style="color:${gradeColor};font-family:'Chivo'">${pct}%</span>
+          </div>
+        </div>
+        <p class="text-lg font-semibold mb-1" style="font-family:'Chivo';color:#0A2F6B">${correctCount} of ${total} Correct</p>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold" style="background:${gradeBg};color:${gradeColor}" data-testid="grade-badge">${grade}</span>
+        <p class="text-sm leading-relaxed mt-4 max-w-lg mx-auto" style="color:#4B5563">${message}</p>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="border rounded-sm p-5" style="border-color:#E5E7EB;background:#FFFFFF" data-testid="results-breakdown">
+        <h3 class="text-sm font-semibold uppercase tracking-wider mb-4" style="color:#4B5563;font-family:'Chivo'">Question Breakdown</h3>
+        <div class="space-y-2">
+          ${breakdownHTML}
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button onclick="reviewQuiz()" class="flex items-center gap-2 text-sm font-medium px-5 py-2.5 rounded-sm border hover:bg-gray-50" style="border-color:#E5E7EB;color:#4B5563" data-testid="review-quiz-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Review Answers
+        </button>
+        <button onclick="resetQuiz()" class="flex items-center gap-2 text-sm font-medium px-5 py-2.5 rounded-sm text-white" style="background:#005EB8" data-testid="new-quiz-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Generate New Quiz
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function reviewQuiz() {
+  currentQuestion = 0;
+  renderQuiz();
+}
+
+function resetQuiz() {
+  currentQuiz = null;
+  currentQuestion = 0;
+  answers = [];
+  submitted = [];
+  document.getElementById('quiz-output').classList.add('hidden');
+  document.getElementById('quiz-output').innerHTML = '';
+  document.getElementById('scenario-input').value = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Close mobile nav on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.sm\\:hidden')) {
+    var m = document.getElementById('mobile-nav-qg');
+    if (m) m.classList.add('hidden');
+  }
+});
+</script>
+</body>
+</html>
